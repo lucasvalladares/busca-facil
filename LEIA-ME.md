@@ -59,43 +59,40 @@ regrave a referência com `python3 testes.py --atualizar-nomes`.
 No fim aparece um resumo: produtos por loja, pedidos feitos, endereços pulados pelo robots.txt, tempo e problemas.
 Para coletar sem publicar o site: `python3 coletor.py --real --sem-publicar`.
 
-## Ligar a coleta automática (1x por dia, às 19h — horário do Paraguai)
+## Coleta automática: roda no GitHub (o Mac pode ficar desligado)
 
-Cole no Terminal (uma linha de cada vez):
+Desde 12/11/2026 a coleta **não roda mais no Mac**. Quem roda é o **GitHub Actions**, de graça
+(o repositório é público), todo dia às **19h do Paraguai** (o GitHub às vezes atrasa alguns minutos).
 
-```
-cp ~/monitor-precos/com.monitorprecos.coleta.plist ~/Library/LaunchAgents/
-launchctl load ~/Library/LaunchAgents/com.monitorprecos.coleta.plist
-```
+A cada execução o GitHub: roda os testes → faz a coleta real (mesmas regras de educação) →
+guarda o `precos.db` atualizado no repositório → monta e publica o site.
 
-- **Testar agora, sem esperar as 19h:** `launchctl start com.monitorprecos.coleta` (é uma coleta real)
-- **Ver o que aconteceu:** `cat ~/Library/Logs/monitor-precos.log`
-- **Desligar:** `launchctl unload ~/Library/LaunchAgents/com.monitorprecos.coleta.plist`
-- **Mudar o horário:** edite `Hour`/`Minute` no arquivo `.plist`, depois rode o `unload`, o `cp` e o `load` de novo.
+- **Ver as execuções e o resumo de cada coleta:** https://github.com/lucasvalladares/busca-facil/actions
+  (clique numa execução: o "Resumo da coleta" mostra a tabela por loja e avisos de problema)
+- **Rodar agora, na mão:** na página acima → "Coleta diária" → **Run workflow** → escolha:
+  - `coleta` — coleta real + publica;
+  - `so-publicar` — só gera e publica o site com os dados que já existem (ex.: depois de mudar o visual);
+  - `checar-conexao` — 1–2 pedidos por loja, para ver se alguma está bloqueando o GitHub.
+- **Aviso por e-mail:** o GitHub manda e-mail se uma execução falhar por completo.
+- **Mudar o horário:** linha `cron` em `.github/workflows/coleta.yml` (está em UTC: 22h UTC = 19h PY).
+- **Desligar:** Actions → "Coleta diária" → botão "…" → Disable workflow.
+- **Atenção:** o GitHub desliga agendamentos de repositórios sem atividade por 60 dias; como a
+  coleta grava um commit por dia, isso não deve acontecer.
 
-**O Mac precisa estar acordado às 19h.** Dormindo (tampa fechada, na bateria), a coleta falha.
-- A coleta roda com `caffeinate`, que impede o Mac de dormir até ela terminar.
-- Para o Mac acordar sozinho às 18:58, rode uma vez (pede a senha): `sudo pmset repeat wakeorpoweron MTWRFSU 18:58:00`
-- O mais seguro é deixar o Mac **na tomada** nesse horário.
-- Se mesmo assim ele dormir no meio da coleta, o coletor percebe: não culpa as lojas, **não publica** o dia incompleto e mostra um aviso. Aí, com o Mac acordado, rode: `python3 coletor.py --real`
+**Antes de mexer no código neste Mac:** rode `git pull` (o GitHub grava o banco novo todo dia).
+Depois de mudar, `git add -A && git commit -m "..." && git push`.
 
-**Por que a pasta fica em `~/monitor-precos` (e não em Documentos):** o macOS bloqueia
-programas agendados de acessar a pasta Documentos ("Operation not permitted"). Fora dela,
-a coleta automática funciona sem precisar dar permissões extras.
+**Rodar no Mac (só se precisar):** `python3 coletor.py --real --sem-publicar`. Não publica nada e
+deixa o banco local diferente do GitHub — evite. O agendamento antigo do Mac (launchd) foi desligado;
+o arquivo `com.monitorprecos.coleta.plist` ficou só como referência.
 
 ## Site público (GitHub Pages)
 
 - **Endereço:** https://lucasvalladares.github.io/busca-facil/
   (espanhol: `.../busca-facil/es.html` · minimalista: `.../busca-facil/minimalista.html`)
-- **Repositório:** https://github.com/lucasvalladares/busca-facil (público; contém só a pasta `site/`)
-- **Atualização automática:** a coleta das 19h gera as páginas e envia a pasta `site/` para o GitHub.
-  O site novo aparece 1–2 minutos depois.
-- **Publicar na mão** (por exemplo, depois de mudar o visual):
-  ```
-  cd ~/monitor-precos && python3 pagina.py && python3 publicar.py
-  ```
-- **Ferramenta do GitHub:** instalada em `~/.local/bin/gh` (login feito com `gh auth login`).
-- **Parar de publicar automaticamente:** apague a pasta `site/.git` (o site no ar fica congelado na última versão).
+- **Repositório:** https://github.com/lucasvalladares/busca-facil (público: código + banco de preços).
+  O site publicado contém só as páginas, fotos e fontes (o banco não fica acessível pelo site).
+- **Publicação:** feita pelo GitHub Actions ao fim de cada coleta (ou com `so-publicar`).
 
 ## Dados de teste (simulados)
 
