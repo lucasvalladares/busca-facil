@@ -614,7 +614,7 @@ function paginaDetalhe(m, condPedida, armPedido, corPedida) {
 function graficoAno(pai, v, an) {
   // no celular, o desenho tem proporção própria (senão o texto fica minúsculo)
   const estreito = window.innerWidth <= 760;
-  const W = estreito ? 400 : 760, H = estreito ? 300 : 260, M = estreito ? {e: 44, d: 84, t: 10, b: 26} : {e: 52, d: 104, t: 10, b: 26};
+  const W = estreito ? 400 : 760, H = estreito ? 300 : 260, M = estreito ? {e: 44, d: 14, t: 14, b: 26} : {e: 52, d: 18, t: 14, b: 26};
   const iniJ = DADOS.inicioJanela, ult = DADOS.ultimaData;
   // Período adaptável: no máximo 12 meses; com menos histórico, começa no primeiro dia com preço.
   const pts = menorPorDia(v);
@@ -674,7 +674,6 @@ function graficoAno(pai, v, an) {
   if (pts.length) {
     const u = pts[pts.length - 1];
     el('svg:circle', {cx: X(u.data), cy: Y(conv(u.preco)), r: 4, class: 'ponto-fim', 'stroke-width': 2}, svg);
-    el('svg:text', {x: X(u.data) + 9, y: Y(conv(u.preco)) + 4, class: 'rot-fim'}, svg, preco(u.preco));
   }
 
   // interação "catraca": o marcador anda de dia em dia, com um pequeno salto

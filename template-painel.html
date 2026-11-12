@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Busca Fácil · Painel interno</title>
+<style>
+:root {
+  --azul: #0047F7; --branco: #FFFFFF; --laranja: #FA4802;
+  --tinta: #0B1533; --tinta-suave: #4A5578; --linha-card: #E3E7F2; --azul-claro: #EDF2FF;
+  --subiu: #C62828; --subiu-fundo: #FDECEC;     /* preço subiu: ruim para quem compra */
+  --baixou: #1B7F3B; --baixou-fundo: #E7F5EC;   /* preço baixou: bom para quem compra */
+  --misto: #6B5E00; --misto-fundo: #FFF6D6;
+  --fonte-titulo: "Anton", Impact, "Arial Narrow", sans-serif;
+  --fonte: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@font-face { font-family: "Anton"; src: url("fontes/anton-latin.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Inter"; src: url("fontes/inter-latin.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--azul); color: var(--branco); font: 400 15px/1.5 var(--fonte); }
+a { color: inherit; }
+button, select, input { font: inherit; }
+.miolo { max-width: 1100px; margin: 0 auto; padding: 20px; }
+h1, h2 { font-family: var(--fonte-titulo); font-weight: 400; text-transform: uppercase; letter-spacing: .5px; margin: 0; line-height: 1.05; }
+h1 { font-size: clamp(34px, 6vw, 56px); }
+h2 { font-size: 24px; color: var(--tinta); margin-bottom: 4px; }
+.topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.marca { font-family: var(--fonte-titulo); font-size: 20px; text-decoration: none; text-transform: uppercase; }
+.tag { border: 2px solid var(--branco); border-radius: 999px; padding: 2px 12px; font-size: 12px; font-weight: 700; }
+.card { background: var(--branco); color: var(--tinta); border: 3px solid #000; border-radius: 22px; padding: 20px; margin-bottom: 18px; }
+.sub { color: var(--tinta-suave); font-size: 13px; margin: 0 0 14px; }
+.linha-dia { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 6px 0 18px; }
+.linha-dia select { border: 2px solid var(--branco); background: var(--azul); color: var(--branco); border-radius: 999px; padding: 6px 14px; font-weight: 700; }
+.blocos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+.bloco { border: 3px solid #000; border-radius: 18px; padding: 14px 16px; text-decoration: none; display: block; background: var(--branco); color: var(--tinta); }
+.bloco .n { font-family: var(--fonte-titulo); font-size: 52px; line-height: 1; display: block; }
+.bloco .r { font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.bloco.subiu .n { color: var(--subiu); } .bloco.baixou .n { color: var(--baixou); } .bloco.misto .n { color: var(--misto); }
+.bloco.ativo { outline: 4px solid var(--laranja); outline-offset: 2px; }
+.etq { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.etq.subiu { color: var(--subiu); background: var(--subiu-fundo); }
+.etq.baixou { color: var(--baixou); background: var(--baixou-fundo); }
+.etq.misto { color: var(--misto); background: var(--misto-fundo); }
+.lista { list-style: none; margin: 0; padding: 0; }
+.lista a { display: grid; grid-template-columns: 1fr auto auto; gap: 4px 14px; align-items: center; padding: 12px 6px; border-top: 1px solid var(--linha-card); text-decoration: none; }
+.lista a:hover { background: var(--azul-claro); }
+.lista .nome { font-weight: 700; } .lista .info { grid-column: 1; color: var(--tinta-suave); font-size: 13px; }
+.lista .pct { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; min-width: 70px; }
+.lista .seta { color: var(--tinta-suave); }
+.vazio { color: var(--tinta-suave); padding: 12px 0; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 10px 8px; border-top: 1px solid var(--linha-card); }
+th { font-size: 12px; color: var(--tinta-suave); font-weight: 600; border-top: none; }
+td.num, th.num { text-align: right; }
+.voltar { display: inline-block; border: 2px solid var(--branco); border-radius: 999px; padding: 6px 14px; text-decoration: none; font-weight: 700; font-size: 13px; margin-bottom: 14px; }
+details summary { cursor: pointer; color: var(--azul); font-weight: 700; font-size: 13px; margin-top: 10px; }
+/* gráfico das coletas */
+.graf { position: relative; }
+.graf svg { width: 100%; height: auto; display: block; overflow: visible; }
+.graf text { font-size: 11px; fill: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.graf .barra { fill: var(--azul); } .graf .barra.prob { fill: var(--laranja); }
+.graf .barra.foco { stroke: var(--tinta); stroke-width: 2; }
+.dica { position: absolute; display: none; pointer-events: none; background: var(--tinta); color: var(--branco); border-radius: 10px; padding: 8px 10px; font-size: 12px; line-height: 1.4; white-space: nowrap; z-index: 2; }
+.legenda { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--tinta-suave); margin-top: 8px; }
+.legenda i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+/* senha */
+.senha { max-width: 420px; margin: 12vh auto; }
+.senha input[type=password] { width: 100%; padding: 12px 14px; border: 2px solid var(--tinta); border-radius: 12px; margin: 10px 0; }
+.senha button { width: 100%; padding: 12px; border: 0; border-radius: 999px; background: var(--azul); color: var(--branco); font-weight: 700; cursor: pointer; }
+.senha .erro { color: var(--subiu); font-weight: 700; min-height: 1.5em; }
+.senha label { font-size: 13px; color: var(--tinta-suave); display: flex; gap: 6px; align-items: center; }
+.sair { background: none; border: 2px solid var(--branco); color: var(--branco); border-radius: 999px; padding: 4px 12px; cursor: pointer; font-size: 12px; font-weight: 700; }
+@media (max-width: 640px) {
+  .miolo { padding: 14px; } .card { padding: 14px; border-radius: 16px; }
+  .blocos { gap: 8px; } .bloco { padding: 10px; border-radius: 14px; } .bloco .n { font-size: 36px; } .bloco .r { font-size: 13px; }
+  .lista a { grid-template-columns: 1fr auto; } .lista .seta { display: none; }
+  th, td { padding: 8px 4px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div class="miolo" id="app"></div>
+<script>
+const CIFRADO = __CIFRADO__, ITERACOES = __ITERACOES__;
+const CONTEUDO = __DADOS__;
+let D = null;
+
+const app = document.getElementById('app');
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, pai, texto) {
+  const e = tag.startsWith('svg:') ? document.createElementNS(NS, tag.slice(4)) : document.createElement(tag);
+  for (const k in (attrs || {})) e.setAttribute(k, attrs[k]);
+  if (texto != null) e.textContent = texto;
+  if (pai) pai.appendChild(e);
+  return e;
+}
+const gs = n => 'Gs. ' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const pct = x => (x > 0 ? '+' : x < 0 ? '−' : '') + Math.abs(x * 100).toLocaleString('pt-BR', {maximumFractionDigits: 1, minimumFractionDigits: 1}) + '%';
+const dataBR = d => d.slice(8, 10) + '/' + d.slice(5, 7) + '/' + d.slice(0, 4);
+const dataCurta = d => d.slice(8, 10) + '/' + d.slice(5, 7);
+const duracao = s => s < 60 ? s + ' s' : Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s';
+const ROT = {subiu: '▲ Subiu', baixou: '▼ Baixou', misto: '◆ Misto'};
+const nomeProduto = p => p.modelo + ' ' + p.variante;
+
+// ---------------------------------------------------------------- senha
+async function decifrar(senha) {
+  const bin = Uint8Array.from(atob(CONTEUDO), c => c.charCodeAt(0));
+  const sal = bin.slice(8, 16), cifra = bin.slice(16);
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(senha), 'PBKDF2', false, ['deriveBits']);
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({name: 'PBKDF2', salt: sal, iterations: ITERACOES, hash: 'SHA-256'}, base, 384));
+  const chave = await crypto.subtle.importKey('raw', bits.slice(0, 32), 'AES-CBC', false, ['decrypt']);
+  const texto = await crypto.subtle.decrypt({name: 'AES-CBC', iv: bits.slice(32, 48)}, chave, cifra);
+  return JSON.parse(new TextDecoder().decode(texto));
+}
+function telaSenha(msg) {
+  app.textContent = '';
+  const c = el('form', {class: 'card senha'}, app);
+  el('h2', null, c, 'Painel interno');
+  el('p', {class: 'sub'}, c, 'Área restrita. Digite a senha do painel.');
+  const inp = el('input', {type: 'password', autocomplete: 'current-password', placeholder: 'Senha', 'aria-label': 'Senha'}, c);
+  const lb = el('label', null, c); const lembrar = el('input', {type: 'checkbox'}, lb); lb.append('Lembrar neste aparelho');
+  el('button', {type: 'submit'}, c, 'Entrar');
+  const erro = el('div', {class: 'erro', role: 'alert'}, c, msg || '');
+  inp.focus();
+  c.addEventListener('submit', async ev => {
+    ev.preventDefault(); erro.textContent = 'Abrindo…';
+    try { D = await decifrar(inp.value); if (lembrar.checked) localStorage.setItem('painel-senha', inp.value); rota(); }
+    catch (e) { erro.textContent = 'Senha incorreta.'; }
+  });
+}
+async function iniciar() {
+  if (!CIFRADO) { D = CONTEUDO; return rota(); }
+  const salva = localStorage.getItem('painel-senha');
+  if (salva) { try { D = await decifrar(salva); return rota(); } catch (e) { localStorage.removeItem('painel-senha'); } }
+  telaSenha();
+}
+
+// ---------------------------------------------------------------- telas
+function topo() {
+  const t = el('div', {class: 'topo'}, app);
+  el('a', {class: 'marca', href: '#/'}, t, '✦ Busca Fácil');
+  const dir = el('div', {style: 'display:flex;gap:8px;align-items:center'}, t);
+  el('span', {class: 'tag'}, dir, 'Painel interno');
+  if (CIFRADO) { const s = el('button', {class: 'sair', type: 'button'}, dir, 'Sair'); s.onclick = () => { localStorage.removeItem('painel-senha'); D = null; telaSenha(); }; }
+}
+
+function rota() {
+  if (!D) return;
+  app.textContent = '';
+  topo();
+  const h = location.hash.slice(1) || '/';
+  const q = new URLSearchParams(h.split('?')[1] || '');
+  const mp = h.match(/^\/p\/([\d-]+)\/(.+?)(\?|$)/);
+  if (mp) return detalhe(mp[1], decodeURIComponent(mp[2]));
+  inicio(q.get('d'), q.get('f') || 'todos');
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', rota);
+
+function inicio(dataSel, filtro) {
+  const dias = D.dias;
+  el('h1', null, app, 'O que mudou de preço');
+  if (!dias.length) { el('p', null, app, 'Ainda não há duas coletas para comparar.'); graficoColetas(); return; }
+  const dia = dias.find(x => x.data === dataSel) || dias[0];
+  const ld = el('div', {class: 'linha-dia'}, app);
+  const sel = el('select', {'aria-label': 'Dia'}, ld);
+  dias.forEach(x => { const o = el('option', {value: x.data}, sel, dataBR(x.data) + ' x ' + dataBR(x.anterior)); if (x === dia) o.selected = true; });
+  sel.onchange = () => { location.hash = '#/?d=' + sel.value; };
+  const ca = D.cambio[dia.anterior], ch = D.cambio[dia.data];
+  el('span', {style: 'font-size:13px;opacity:.9'}, ld, 'Câmbio ' + (ca ? gs(ca) : '?') + ' → ' + (ch ? gs(ch) : '?') +
+     ' · ' + dia.novas + ' ofertas novas · ' + dia.sumiram + ' saíram de estoque/da loja');
+
+  const bl = el('div', {class: 'blocos'}, app);
+  [['subiu', 'Subiram'], ['baixou', 'Baixaram'], ['misto', 'Misto']].forEach(([k, rot]) => {
+    const a = el('a', {class: 'bloco ' + k + (filtro === k ? ' ativo' : ''), href: '#/?d=' + dia.data + '&f=' + (filtro === k ? 'todos' : k)}, bl);
+    el('span', {class: 'n'}, a, String(dia[k]));
+    el('span', {class: 'r'}, a, (k === 'subiu' ? '▲ ' : k === 'baixou' ? '▼ ' : '◆ ') + rot);
+  });
+
+  graficoColetas();
+
+  const c = el('div', {class: 'card'}, app);
+  const lista = dia.produtos.filter(p => filtro === 'todos' || p.direcao === filtro);
+  el('h2', null, c, filtro === 'todos' ? 'Produtos com preço diferente' : ROT[filtro].slice(2) + ': ' + lista.length);
+  el('p', {class: 'sub'}, c, 'Mesmo produto e mesma loja, ' + dataBR(dia.data) + ' comparado com ' + dataBR(dia.anterior) +
+     '. Variações menores que 0,5% (arredondamento/câmbio) são ignoradas. Toque para ver as lojas.');
+  if (!lista.length) el('div', {class: 'vazio'}, c, 'Nenhum produto mudou de preço.');
+  const ul = el('ul', {class: 'lista'}, c);
+  lista.forEach(p => {
+    const maior = p.lojas[0];
+    const a = el('a', {href: '#/p/' + dia.data + '/' + encodeURIComponent(p.chave)}, el('li', null, ul));
+    el('span', {class: 'nome'}, a, nomeProduto(p));
+    el('span', {class: 'etq ' + p.direcao}, a, ROT[p.direcao]);
+    el('span', {class: 'seta', 'aria-hidden': 'true'}, a, '→');
+    el('span', {class: 'info'}, a, p.condicao + ' · ' + p.lojas.length + (p.lojas.length === 1 ? ' loja mudou' : ' lojas mudaram') +
+       ' · maior variação ' + pct(maior.pct) + ' (' + maior.loja + ')');
+  });
+}
+
+function detalhe(data, chave) {
+  const dia = D.dias.find(x => x.data === data);
+  const p = dia && dia.produtos.find(x => x.chave === chave);
+  el('a', {class: 'voltar', href: '#/?d=' + data}, app, '← Voltar');
+  if (!p) { el('p', null, app, 'Produto não encontrado.'); return; }
+  el('h1', null, app, nomeProduto(p));
+  const ld = el('div', {class: 'linha-dia'}, app);
+  el('span', {class: 'etq ' + p.direcao}, ld, ROT[p.direcao]);
+  el('span', null, ld, p.condicao + ' · ' + dataBR(dia.data) + ' comparado com ' + dataBR(dia.anterior));
+
+  const c = el('div', {class: 'card'}, app);
+  el('h2', null, c, 'Lojas que mudaram o preço');
+  const tab = el('table', null, c);
+  const cab = el('tr', null, el('thead', null, tab));
+  [['Loja'], ['Antes', 'num'], ['Hoje', 'num'], ['Variação', 'num']].forEach(([h, cl]) => el('th', cl ? {class: cl} : null, cab, h));
+  const corpo = el('tbody', null, tab);
+  p.lojas.forEach(x => {
+    const tr = el('tr', null, corpo);
+    el('td', null, tr, x.loja);
+    el('td', {class: 'num'}, tr, gs(x.antes));
+    el('td', {class: 'num'}, tr, gs(x.hoje));
+    const td = el('td', {class: 'num'}, tr);
+    el('span', {class: 'etq ' + (x.pct > 0 ? 'subiu' : 'baixou')}, td, (x.pct > 0 ? '▲ ' : '▼ ') + pct(x.pct));
+  });
+  const r = el('p', {class: 'sub', style: 'margin-top:14px'}, c);
+  r.textContent = 'Menor preço entre todas as lojas: ' + gs(p.menorAntes) + ' → ' + (p.menorHoje ? gs(p.menorHoje) : 'sem oferta') +
+    (p.menorHoje ? ' (' + pct((p.menorHoje - p.menorAntes) / p.menorAntes) + ')' : '') + '.';
+  if (p.outras.length) {
+    const c2 = el('div', {class: 'card'}, app);
+    el('h2', null, c2, 'Lojas sem mudança');
+    const t2 = el('table', null, c2);
+    const b2 = el('tbody', null, t2);
+    p.outras.forEach(x => { const tr = el('tr', null, b2); el('td', null, tr, x.loja); el('td', {class: 'num'}, tr, gs(x.preco)); });
+  }
+}
+
+// Coletas: uma barra por execução = quanto tempo levou (laranja = alguma loja com problema)
+function graficoColetas() {
+  const cs = D.coletas.slice(-45);
+  const c = el('div', {class: 'card'}, app);
+  el('h2', null, c, 'Quanto tempo levou cada coleta');
+  if (!cs.length) { el('div', {class: 'vazio'}, c, 'Sem coletas registradas.'); return; }
+  const u = cs[cs.length - 1];
+  el('p', {class: 'sub'}, c, 'Última: ' + dataBR(u.quando.slice(0, 10)) + ' às ' + u.quando.slice(11, 16) + ' · ' + duracao(u.segundos) +
+     ' · ' + u.produtos + ' produtos · ' + (u.lojas - u.problemas) + ' de ' + u.lojas + ' lojas ok');
+  const estreito = window.innerWidth <= 640;
+  const W = estreito ? 400 : 760, H = 220, M = {e: 46, d: 8, t: 10, b: 24};
+  const maxS = Math.max(...cs.map(x => x.segundos), 60);
+  const passos = [60, 120, 300, 600, 900, 1800, 3600, 7200];
+  const passo = passos.find(p => maxS / p <= 4) || 7200;
+  const topoY = Math.ceil(maxS / passo) * passo;
+  const Y = s => M.t + (1 - s / topoY) * (H - M.t - M.b);
+  const larg = (W - M.e - M.d) / cs.length;
+  const graf = el('div', {class: 'graf'}, c);
+  const svg = el('svg:svg', {viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Duração de cada coleta, em minutos'}, graf);
+  for (let s = 0; s <= topoY; s += passo) {
+    el('svg:line', {x1: M.e, x2: W - M.d, y1: Y(s), y2: Y(s), stroke: s === 0 ? '#B8C0D6' : 'var(--linha-card)', 'stroke-width': 1}, svg);
+    el('svg:text', {x: M.e - 8, y: Y(s) + 4, 'text-anchor': 'end'}, svg, (s / 60) + ' min');
+  }
+  const dica = el('div', {class: 'dica'}, graf);
+  const pulo = Math.max(1, Math.ceil(cs.length / (estreito ? 5 : 10)));
+  let ultimaData = '';
+  cs.forEach((x, i) => {
+    const bw = Math.max(2, Math.min(28, larg - 2)), cx = M.e + larg * i + larg / 2, x0 = cx - bw / 2;
+    const y = Math.min(Y(x.segundos), Y(0) - 2), r = Math.min(4, bw / 2), base = Y(0);
+    // barra com cantos arredondados só em cima, apoiada na linha de base
+    const d = `M${x0},${base}V${y + r}Q${x0},${y} ${x0 + r},${y}H${x0 + bw - r}Q${x0 + bw},${y} ${x0 + bw},${y + r}V${base}Z`;
+    const b = el('svg:path', {d, class: 'barra' + (x.problemas ? ' prob' : '')}, svg);
+    const dt = x.quando.slice(0, 10);
+    if (i % pulo === 0 && dt !== ultimaData) { el('svg:text', {x: cx, y: H - 6, 'text-anchor': 'middle'}, svg, dataCurta(dt)); ultimaData = dt; }
+    const alvo = el('svg:rect', {x: M.e + larg * i, y: M.t, width: larg, height: H - M.t - M.b, fill: 'transparent'}, svg);
+    const mostrar = () => {
+      svg.querySelectorAll('.foco').forEach(e => e.classList.remove('foco')); b.classList.add('foco');
+      dica.textContent = '';
+      el('div', {style: 'font-weight:700'}, dica, dataBR(dt) + ' às ' + x.quando.slice(11, 16));
+      el('div', null, dica, 'Duração: ' + duracao(x.segundos));
+      el('div', null, dica, x.produtos + ' produtos · ' + (x.lojas - x.problemas) + ' de ' + x.lojas + ' lojas ok');
+      if (x.problemas) el('div', null, dica, '⚠ Problema: ' + x.lojasProblema);
+      dica.style.display = 'block';
+      const rr = svg.getBoundingClientRect(), px = cx * rr.width / W;
+      let esq = px + 12; if (esq + dica.offsetWidth > rr.width) esq = px - 12 - dica.offsetWidth;
+      dica.style.left = Math.max(0, esq) + 'px'; dica.style.top = Math.max(0, y * rr.height / H - dica.offsetHeight / 2) + 'px';
+    };
+    alvo.addEventListener('pointerenter', mostrar); alvo.addEventListener('pointerdown', mostrar);
+  });
+  svg.addEventListener('pointerleave', () => { dica.style.display = 'none'; svg.querySelectorAll('.foco').forEach(e => e.classList.remove('foco')); });
+  const lg = el('div', {class: 'legenda'}, c);
+  const a = el('span', null, lg); el('i', {style: 'background:var(--azul)'}, a); a.append('Todas as lojas ok');
+  const b = el('span', null, lg); el('i', {style: 'background:var(--laranja)'}, b); b.append('Alguma loja com problema');
+  const det = el('details', null, c);
+  el('summary', null, det, 'Ver tabela');
+  const tab = el('table', null, det);
+  const cab = el('tr', null, el('thead', null, tab));
+  [['Quando'], ['Duração', 'num'], ['Produtos', 'num'], ['Lojas ok', 'num'], ['Problemas']].forEach(([h, cl]) => el('th', cl ? {class: cl} : null, cab, h));
+  const corpo = el('tbody', null, tab);
+  cs.slice().reverse().forEach(x => {
+    const tr = el('tr', null, corpo);
+    el('td', null, tr, dataBR(x.quando.slice(0, 10)) + ' ' + x.quando.slice(11, 16));
+    el('td', {class: 'num'}, tr, duracao(x.segundos));
+    el('td', {class: 'num'}, tr, String(x.produtos));
+    el('td', {class: 'num'}, tr, (x.lojas - x.problemas) + '/' + x.lojas);
+    el('td', null, tr, x.lojasProblema || '—');
+  });
+}
+
+iniciar();
+</script>
+</body>
+</html>

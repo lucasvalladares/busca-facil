@@ -497,6 +497,13 @@ def main():
         lojas_com_problema = [r["loja"] for r in resultados if r["erro"]]
         avisar("Busca Fácil: %d loja(s) com problema na coleta" % erros,
                ", ".join(lojas_com_problema) + ". Detalhes em coleta.log")
+    if real:   # resumo para o aviso no celular (notificar.py)
+        with open(os.path.join(PASTA, "ultima-coleta.json"), "w", encoding="utf-8") as f:
+            json.dump({"data": data, "hora": hora, "segundos": round(total),
+                       "produtos": sum(len(r["linhas"]) for r in resultados),
+                       "lojas": len(resultados) + len(pausadas), "lojas_ok": sum(1 for r in resultados if not r["erro"]),
+                       "problemas": [{"loja": r["loja"], "erro": r["erro"][:120]} for r in resultados if r["erro"]] +
+                                    [{"loja": l, "erro": "pausada hoje"} for l in pausadas]}, f, ensure_ascii=False)
     log("Total: %d produtos · %d pedidos · %.0f segundos · %d loja(s) com problema" % (
         sum(len(r["linhas"]) for r in resultados), sum(r["cli"].pedidos for r in resultados), total, erros))
 

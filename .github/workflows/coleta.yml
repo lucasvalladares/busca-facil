@@ -3,6 +3,7 @@
 #
 # Todo dia às 19h do Paraguai (22h UTC; o GitHub pode atrasar alguns minutos):
 #   1. testes (sem internet)  2. coleta real  3. guarda o banco no repositório  4. publica o site
+#   5. painel interno (criptografado)  6. aviso no celular (ntfy)
 #
 # Para rodar na mão: aba Actions > "Coleta diária" > Run workflow.
 
@@ -74,7 +75,9 @@ jobs:
 
       - name: Montar site
         if: github.event.inputs.modo != 'checar-conexao'
-        run: python3 -c "import pagina, publicar; pagina.gerar(); publicar.montar_site()"
+        env:
+          PAINEL_SENHA: ${{ secrets.PAINEL_SENHA }}   # painel interno: publicado só criptografado
+        run: python3 -c "import pagina, publicar, painel; pagina.gerar(); publicar.montar_site(); painel.gerar_site()"
 
       - uses: actions/upload-pages-artifact@v3
         if: github.event.inputs.modo != 'checar-conexao'
@@ -84,6 +87,14 @@ jobs:
       - id: deploy
         if: github.event.inputs.modo != 'checar-conexao'
         uses: actions/deploy-pages@v4
+
+      - name: Aviso no celular
+        if: always() && (github.event_name == 'schedule' || github.event.inputs.modo == 'coleta')
+        env:
+          NTFY_TOPICO: ${{ secrets.NTFY_TOPICO }}
+          STATUS: ${{ job.status }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python3 notificar.py
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}

@@ -217,6 +217,18 @@ input[type=search] { min-width: 220px; }
 .grafico svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; }
 .grafico text { font-size: 11px; fill: var(--tinta-suave); font-variant-numeric: tabular-nums; }
 .grafico .rot-fim { fill: var(--azul); font-weight: 700; font-size: 12px; }
+.hist-topo { display: flex; flex-direction: column; gap: 12px; margin: 4px 0 14px; }
+.hist-resumo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.hist-num { border: 2px solid var(--tinta); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hist-num .r { font-size: 12px; color: var(--tinta-suave); }
+.hist-num b { font-size: 18px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hist-num .s { font-size: 11px; color: var(--tinta-suave); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-num.menor b { color: var(--azul); }
+.hist-periodos { display: flex; gap: 6px; flex-wrap: wrap; }
+.hist-periodos .pill { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 2px solid var(--tinta); background: var(--branco); color: var(--tinta); cursor: pointer; }
+.hist-periodos .pill.ativo { background: var(--tinta); color: var(--branco); }
+@media (max-width: 760px) { .hist-num { padding: 8px; } .hist-num b { font-size: 15px; } }
+@media (max-width: 520px) { .hist-resumo { gap: 6px; } .hist-num { padding: 7px 6px; border-radius: 10px; } .hist-num b { font-size: 13px; } .hist-num .r, .hist-num .s { font-size: 10.5px; } }
 .linha-preco { stroke: var(--azul); }
 .ponto-fim { fill: var(--azul); stroke: var(--branco); }
 .grafico .cruz { stroke: var(--azul); stroke-opacity: .3; stroke-width: 1; visibility: hidden; }
@@ -908,22 +920,64 @@ function paginaDetalhe(m, condPedida, armPedido, corPedida) {
   el('div', {class: 'nota'}, ind, 'Barato: mais de 10% abaixo da média. Normal: até 10% para mais ou para menos. Caro: mais de 10% acima. A média considera o menor preço de cada dia nos últimos 40 dias.');
 
   const hc = el('div', {class: 'card'}, g2b);
-  el('h2', null, hc, 'Menor preço de cada dia');
-  graficoAno(hc, v, an);
+  el('h2', null, hc, 'Histórico de preços');
+  graficoPrecos(hc, v, an);
   onda(sec, 'var(--azul)');
 }
 
 // ============================================================
-// Gráfico de 12 meses: UMA linha = menor preço de cada dia
+// Histórico (estilo Buscapé): resumo menor/médio/maior em cima, períodos, gráfico limpo
 // ============================================================
-function graficoAno(pai, v, an) {
+const PERIODOS = [[30, '30 dias'], [90, '3 meses'], [180, '6 meses'], [365, '12 meses']];
+function graficoPrecos(pai, v, an) {
+  const todos = menorPorDia(v);
+  const historico = todos.length ? (t(DADOS.ultimaData) - t(todos[0].data)) / DIA + 1 : 0;
+  // só os períodos que fazem diferença (com 10 dias de dados, "6 meses" mostraria o mesmo que "30 dias")
+  const opcoes = PERIODOS.filter((p, i) => i === 0 || historico > PERIODOS[i - 1][0]);
+  let escolhido = opcoes[opcoes.length - 1][0];
+  const topo = el('div', {class: 'hist-topo'}, pai);
+  const resumo = el('div', {class: 'hist-resumo'}, topo);
+  const pills = opcoes.length > 1 ? el('div', {class: 'hist-periodos', role: 'group', 'aria-label': 'Período'}, topo) : null;
+  const area = el('div', null, pai);
+  function desenhar() {
+    const ini = iso(t(DADOS.ultimaData) - (escolhido - 1) * DIA);
+    const pts = todos.filter(p => p.data >= ini);
+    resumo.textContent = '';
+    if (pts.length) {
+      const menor = pts.reduce((a, b) => b.preco < a.preco ? b : a);
+      const maior = pts.reduce((a, b) => b.preco > a.preco ? b : a);
+      const media = pts.reduce((s, p) => s + p.preco, 0) / pts.length;
+      const caixa = (rot, val, sub, cls) => {
+        const c = el('div', {class: 'hist-num ' + (cls || '')}, resumo);
+        el('span', {class: 'r'}, c, rot); el('b', null, c, preco(val)); if (sub) el('span', {class: 's'}, c, sub);
+      };
+      caixa('Menor preço', menor.preco, dataCurta(menor.data) + ' · ' + menor.loja, 'menor');
+      caixa('Preço médio', media, pts.length + (pts.length === 1 ? ' dia' : ' dias'));
+      caixa('Maior preço', maior.preco, dataCurta(maior.data) + ' · ' + maior.loja, 'maior');
+    }
+    if (pills) {
+      pills.textContent = '';
+      opcoes.forEach(([d, rot]) => {
+        const b = el('button', {type: 'button', class: 'pill' + (d === escolhido ? ' ativo' : ''), 'aria-pressed': String(d === escolhido)}, pills, rot);
+        b.addEventListener('click', () => { escolhido = d; desenhar(); });
+      });
+    }
+    area.textContent = '';
+    graficoAno(area, v, an, ini);
+  }
+  desenhar();
+}
+function dataCurta(d) { return d.slice(8, 10) + '/' + d.slice(5, 7); }
+
+// Gráfico: UMA linha = menor preço de cada dia (sem textos sobre a linha; o valor aparece ao passar o dedo/mouse)
+function graficoAno(pai, v, an, desde) {
   // no celular, o desenho tem proporção própria (senão o texto fica minúsculo)
   const estreito = window.innerWidth <= 760;
-  const W = estreito ? 400 : 760, H = estreito ? 300 : 260, M = estreito ? {e: 44, d: 84, t: 10, b: 26} : {e: 52, d: 104, t: 10, b: 26};
+  const W = estreito ? 400 : 760, H = estreito ? 280 : 260, M = estreito ? {e: 44, d: 14, t: 14, b: 26} : {e: 52, d: 18, t: 14, b: 26};
   const iniJ = DADOS.inicioJanela, ult = DADOS.ultimaData;
   // Período adaptável: no máximo 12 meses; com menos histórico, começa no primeiro dia com preço.
-  const pts = menorPorDia(v);
-  let x0 = Math.max(t(iniJ), pts.length ? t(pts[0].data) : t(ult)) - DIA / 2, x1 = t(ult) + DIA / 2;
+  const pts = menorPorDia(v).filter(p => !desde || p.data >= desde);
+  let x0 = Math.max(t(desde && desde > iniJ ? desde : iniJ), pts.length ? t(pts[0].data) : t(ult)) - DIA / 2, x1 = t(ult) + DIA / 2;
   if (x1 - x0 < 7 * DIA) { const falta = 7 * DIA - (x1 - x0); x0 -= falta / 2; x1 += falta / 2; }  // pelo menos 1 semana na tela
   const Xt = ms => M.e + (ms - x0) / (x1 - x0) * (W - M.e - M.d);
   const X = d => Xt(t(d));
@@ -970,7 +1024,9 @@ function graficoAno(pai, v, an) {
   if (pts.length) {
     const u = pts[pts.length - 1];
     el('svg:circle', {cx: X(u.data), cy: Y(conv(u.preco)), r: 5, class: 'ponto-fim', 'stroke-width': 2}, svg);
-    el('svg:text', {x: X(u.data) + 10, y: Y(conv(u.preco)) + 4, class: 'rot-fim'}, svg, preco(u.preco));
+    // pontos onde o preço mudou (com preço parado, a linha fica limpa)
+    pts.forEach((p, i) => { if (i > 0 && p.preco !== pts[i - 1].preco && p !== u)
+      el('svg:circle', {cx: X(p.data), cy: Y(conv(p.preco)), r: 3.5, class: 'ponto-fim', 'stroke-width': 1.5}, svg); });
   }
 
   // interação "catraca"

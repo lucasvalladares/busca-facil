@@ -7,3 +7,5 @@ relatorio-*.html
 __pycache__/
 *.pyc
 .DS_Store
+painel-aberto.html
+ultima-coleta.json
