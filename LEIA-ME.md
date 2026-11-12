@@ -100,7 +100,7 @@ o arquivo `com.monitorprecos.coleta.plist` ficou só como referência.
 ## Site público (GitHub Pages)
 
 - **Endereço:** https://lucasvalladares.github.io/busca-facil/
-  (espanhol: `.../busca-facil/es.html` · minimalista: `.../busca-facil/minimalista.html`)
+  (espanhol: `.../busca-facil/es.html` · minimalista: `.../busca-facil/minimalista.html` · minimalista em espanhol: `.../busca-facil/minimalista-es.html`)
 - **Repositório:** https://github.com/lucasvalladares/busca-facil (público: código + banco de preços).
   O site publicado contém só as páginas, fotos e fontes (o banco não fica acessível pelo site).
 - **Publicação:** feita pelo GitHub Actions ao fim de cada coleta (ou com `so-publicar`).

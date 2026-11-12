@@ -257,13 +257,14 @@ def gerar(baixar_fotos=False):
             f.write(modelo_html.replace("__DADOS__", js))
         gerados.append(saida)
 
-        # Versão em espanhol da vibrante: gerada a partir do mesmo template, com a tabela de traducao_es.py
-        if nome == "vibrante":
+        # Versão em espanhol (vibrante e minimalista): mesmo HTML, com a tabela de traducao_es.py
+        if nome in ("vibrante", "minimalista"):
             import traducao_es
             html_es, avisos = traducao_es.traduzir(modelo_html.replace("__DADOS__", js))
             for aviso in avisos:
-                print("   aviso (espanhol): " + aviso)
-            saida_es = os.path.join(PASTA_SAIDA, "relatorio-vibrante-es.html")
+                if nome == "vibrante":   # os mesmos avisos valeriam para as duas; mostra uma vez só
+                    print("   aviso (espanhol): " + aviso)
+            saida_es = os.path.join(PASTA_SAIDA, "relatorio-%s-es.html" % nome)
             with open(saida_es, "w", encoding="utf-8") as f:
                 f.write(html_es)
             gerados.append(saida_es)

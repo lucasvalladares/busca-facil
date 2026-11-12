@@ -6,6 +6,7 @@ internet (sem depender deste Mac):
     index.html        -> versão vibrante em português (página principal)
     es.html           -> versão vibrante em espanhol
     minimalista.html  -> versão minimalista
+    minimalista-es.html -> versão minimalista em espanhol
     fotos/, fontes/   -> imagens dos modelos e fontes
 Os preços já vão embutidos dentro de cada página.
 
@@ -25,6 +26,7 @@ PAGINAS = {  # arquivo gerado -> nome no site
     "relatorio-vibrante.html": "index.html",
     "relatorio-vibrante-es.html": "es.html",
     "relatorio-minimalista.html": "minimalista.html",
+    "relatorio-minimalista-es.html": "minimalista-es.html",
 }
 
 
