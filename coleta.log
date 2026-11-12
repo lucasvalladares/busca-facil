@@ -147,3 +147,20 @@
 2026-11-12 19:29:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
 2026-11-12 19:29:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
 2026-11-12 19:29:38 Publicação: NÃO feita — o Mac dormiu durante a coleta e 6 loja(s) ficaram sem dados (Nissei, Mega Eletrônicos, Shopping China, Tecnostore, Visuar, Bristol). O site continua com a coleta anterior. Com o Mac acordado, rode de novo: python3 coletor.py --real
+2026-11-12 19:33:43 === Coleta REAL 12/11/2026 (19:33) ===
+2026-11-12 19:37:16 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-12 19:37:16 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-12 19:37:16 Nissei                  147        147        5        0     21s  ok
+2026-11-12 19:37:16 Mega Eletrônicos        229         98       34        0    184s  ok
+2026-11-12 19:37:16 Shopping China          153        153       39        0    212s  ok
+2026-11-12 19:37:16 Alemania Cell            70         70       29        0    112s  ok
+2026-11-12 19:37:16 Tecnostore               83         76       26        0    130s  ok
+2026-11-12 19:37:16 Visuar                   84         45       13        0     51s  ok
+2026-11-12 19:37:16 Tienda Yankee            25         18       29        0    121s  ok
+2026-11-12 19:37:16 Bristol                  49         49       18        0     74s  ok
+2026-11-12 19:37:16 Tienda Móvil             38         27       31        0    126s  ok
+2026-11-12 19:37:16 Total: 878 produtos · 224 pedidos · 212 segundos · 0 loja(s) com problema
+2026-11-12 19:37:21 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista.html
+2026-11-12 19:37:21 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
+2026-11-12 19:37:21 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
+2026-11-12 19:37:21 Publicação: pulada (--sem-publicar).
