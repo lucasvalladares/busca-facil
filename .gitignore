@@ -1,0 +1,9 @@
+# gerado / local
+site/
+dev/
+teste/
+fixtures/
+relatorio-*.html
+__pycache__/
+*.pyc
+.DS_Store

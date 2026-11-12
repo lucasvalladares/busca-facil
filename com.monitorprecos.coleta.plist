@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Agendamento diário da coleta (launchd, o agendador do macOS).
+  Roda todo dia às 19h (horário do Mac = Paraguai). Se o Mac estiver dormindo nesse horário,
+  roda assim que ele acordar.
+  "caffeinate -i -s" mantém o Mac acordado enquanto a coleta roda (-s só vale na tomada).
+  Para o Mac acordar sozinho às 18:58: sudo pmset repeat wakeorpoweron MTWRFSU 18:58:00
+  O registro (log) de cada execução fica em ~/Library/Logs/monitor-precos.log
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.monitorprecos.coleta</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/caffeinate</string>
+        <string>-i</string>
+        <string>-s</string>
+        <string>/usr/bin/python3</string>
+        <string>/Users/lucas.valladares/monitor-precos/coletor.py</string>
+        <string>--real</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>19</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/lucas.valladares/Library/Logs/monitor-precos.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/lucas.valladares/Library/Logs/monitor-precos.log</string>
+</dict>
+</plist>

@@ -1,0 +1,149 @@
+2026-11-10 18:02:11 === Coleta de TESTE (cópias em fixtures/) 10/11/2026 (18:02) ===
+2026-11-10 18:02:11    Nissei: ERRO: SemCopia: sem cópia salva para https://nissei.com/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Mega Eletrônicos: ERRO: SemCopia: sem cópia salva para https://www.megaeletronicos.com/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Shopping China: ERRO: SemCopia: sem cópia salva para https://www.shoppingchina.com.py/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Alemania Cell: ERRO: SemCopia: sem cópia salva para https://www.alemaniacell.com/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Tecnostore: ERRO: SemCopia: sem cópia salva para https://tecnostore.com.py/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Visuar: ERRO: SemCopia: sem cópia salva para https://visuar.com.py/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Tienda Yankee: ERRO: SemCopia: sem cópia salva para https://tiendayankee.com/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Bristol: ERRO: SemCopia: sem cópia salva para https://www.bristol.com.py/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11    Tienda Móvil: ERRO: SemCopia: sem cópia salva para https://tiendamovil.com.py/robots.txt (rode uma vez: python3 coletor.py --real)
+2026-11-10 18:02:11 Cotação: 1 US$ = Gs. 6.750 (última salva)
+2026-11-10 18:02:11 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-10 18:02:11 Nissei                    0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://nissei.com/robots.txt (rode uma vez: python3 
+2026-11-10 18:02:11 Mega Eletrônicos          0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.megaeletronicos.com/robots.txt (rode uma 
+2026-11-10 18:02:11 Shopping China            0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.shoppingchina.com.py/robots.txt (rode uma
+2026-11-10 18:02:11 Alemania Cell             0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.alemaniacell.com/robots.txt (rode uma vez
+2026-11-10 18:02:11 Tecnostore                0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://tecnostore.com.py/robots.txt (rode uma vez: p
+2026-11-10 18:02:11 Visuar                    0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://visuar.com.py/robots.txt (rode uma vez: pytho
+2026-11-10 18:02:11 Tienda Yankee             0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://tiendayankee.com/robots.txt (rode uma vez: py
+2026-11-10 18:02:11 Bristol                   0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.bristol.com.py/robots.txt (rode uma vez: 
+2026-11-10 18:02:11 Tienda Móvil              0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://tiendamovil.com.py/robots.txt (rode uma vez: 
+2026-11-10 18:02:11 Total: 0 produtos · 0 pedidos · 0 segundos · 9 loja(s) com problema
+2026-11-10 18:02:12 Página atualizada: /Users/lucas.valladares/monitor-precos/dev/relatorio-minimalista.html
+2026-11-10 18:02:12 Página atualizada: /Users/lucas.valladares/monitor-precos/dev/relatorio-vibrante.html
+2026-11-10 18:02:12 Página atualizada: /Users/lucas.valladares/monitor-precos/dev/relatorio-vibrante-es.html
+2026-11-10 18:02:12 Teste: nada foi publicado. Páginas de teste em dev/.
+2026-11-10 18:46:13 === Coleta REAL 10/11/2026 (18:46) ===
+2026-11-10 18:50:14    Nissei: ERRO: HTTPError: HTTP Error 400: Bad Request
+2026-11-10 18:50:14 Cotação: 1 US$ = Gs. 6.750 (última salva)
+2026-11-10 18:50:14 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-10 18:50:14 Nissei                    0          0        2        0      5s  ERRO: HTTPError: HTTP Error 400: Bad Request
+2026-11-10 18:50:14 Mega Eletrônicos        226        120       32        0    217s  ok
+2026-11-10 18:50:14 Shopping China          155        155       38        0    241s  ok
+2026-11-10 18:50:14 Alemania Cell            69         69       28        0    158s  ok
+2026-11-10 18:50:14 Tecnostore               83         74       25        0    135s  ok
+2026-11-10 18:50:14 Visuar                   73         36       10        0     50s  ok
+2026-11-10 18:50:14 Tienda Yankee            24         17       29        0    131s  ok
+2026-11-10 18:50:14 Bristol                  32         32       17        0     96s  ok
+2026-11-10 18:50:14 Tienda Móvil             32         17       30        0    149s  ok
+2026-11-10 18:50:14 Total: 694 produtos · 211 pedidos · 241 segundos · 1 loja(s) com problema
+2026-11-10 18:50:52 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-minimalista.html
+2026-11-10 18:50:52 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
+2026-11-10 18:50:52 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
+2026-11-10 18:50:52 Publicação: pulada (--sem-publicar).
+2026-11-11 19:00:18 === Coleta REAL 11/11/2026 (19:00) ===
+2026-11-11 20:31:55    Mega Eletrônicos: PARADA: resposta levou 951s (> 20s) em https://www.megaeletronicos.com/producto/buscar?search=redmi%2015&page=2
+2026-11-11 20:31:55    Shopping China: PARADA: URLError em https://www.shoppingchina.com.py/site/search?query=celular%20apple%20iphone&page=1
+2026-11-11 20:31:55    Alemania Cell: PARADA: resposta levou 909s (> 20s) em https://www.alemaniacell.com/celulares?marca=apple&js=1&pag=5
+2026-11-11 20:31:55    Tecnostore: PARADA: timeout em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-11 20:31:55    Visuar: PARADA: resposta levou 1049s (> 20s) em https://visuar.com.py/celulares/iphone/?ajax=1&page=1
+2026-11-11 20:31:55    Tienda Yankee: PARADA: timeout em https://tiendayankee.com/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-11 20:31:55    Bristol: PARADA: ConnectionResetError em https://www.bristol.com.py/celulares-y-smartwatches/celulares?marca=apple
+2026-11-11 20:31:55    Tienda Móvil: PARADA: timeout em https://tiendamovil.com.py/shop/busqueda?controller=search&s=iphone&ajax=1&resultsPerPage=100&page=1
+2026-11-11 20:31:55 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-11 20:31:55 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-11 20:31:55 Nissei                  146        146        5        0   2633s  ok
+2026-11-11 20:31:55 Mega Eletrônicos          0          0        8        0   5497s  PARADA: resposta levou 951s (> 20s) em https://www.megaeletronicos.com/producto/buscar?sea
+2026-11-11 20:31:55 Shopping China            0          0        3        0   2044s  PARADA: URLError em https://www.shoppingchina.com.py/site/search?query=celular%20apple%20i
+2026-11-11 20:31:55 Alemania Cell             0          0        6        0   4542s  PARADA: resposta levou 909s (> 20s) em https://www.alemaniacell.com/celulares?marca=apple&
+2026-11-11 20:31:55 Tecnostore                0          0        2        0   3632s  PARADA: timeout em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone
+2026-11-11 20:31:55 Visuar                    0          0        2        0   1053s  PARADA: resposta levou 1049s (> 20s) em https://visuar.com.py/celulares/iphone/?ajax=1&pag
+2026-11-11 20:31:55 Tienda Yankee             0          0        2        0   3630s  PARADA: timeout em https://tiendayankee.com/wp-json/wc/store/v1/products?search=iphone&per
+2026-11-11 20:31:55 Bristol                   0          0        2        0   1052s  PARADA: ConnectionResetError em https://www.bristol.com.py/celulares-y-smartwatches/celula
+2026-11-11 20:31:55 Tienda Móvil              0          0        2        0   3630s  PARADA: timeout em https://tiendamovil.com.py/shop/busqueda?controller=search&s=iphone&aja
+2026-11-11 20:31:55 Total: 146 produtos · 32 pedidos · 5497 segundos · 8 loja(s) com problema
+2026-11-11 20:31:55 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-minimalista.html
+2026-11-11 20:31:55 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
+2026-11-11 20:31:55 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
+2026-11-11 21:10:35 === Coleta REAL 11/11/2026 (21:10) ===
+2026-11-11 21:13:38 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-11 21:13:38 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-11 21:13:38 Nissei                  146        146        5        0     21s  ok
+2026-11-11 21:13:38 Mega Eletrônicos        224        103       32        0    149s  ok
+2026-11-11 21:13:38 Shopping China          156        156       35        0    183s  ok
+2026-11-11 21:13:38 Alemania Cell            69         69       28        0    148s  ok
+2026-11-11 21:13:38 Tecnostore               79         72       25        0    133s  ok
+2026-11-11 21:13:38 Visuar                   73         36       10        0     44s  ok
+2026-11-11 21:13:38 Tienda Yankee            24         17       29        0    133s  ok
+2026-11-11 21:13:38 Bristol                  32         32       17        0     87s  ok
+2026-11-11 21:13:38 Tienda Móvil             29         17       28        0    137s  ok
+2026-11-11 21:13:38 Total: 832 produtos · 209 pedidos · 183 segundos · 0 loja(s) com problema
+2026-11-11 21:13:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-minimalista.html
+2026-11-11 21:13:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
+2026-11-11 21:13:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
+2026-11-11 21:22:34 === REPROCESSAMENTO das cópias (sem acessar lojas) 11/11/2026 (21:22) ===
+2026-11-11 21:22:34    Nissei: ERRO: SemCopia: sem cópia salva para https://nissei.com/graphql (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Mega Eletrônicos: ERRO: SemCopia: sem cópia salva para https://www.megaeletronicos.com/producto/buscar?search=u8000&page=1 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Shopping China: ERRO: SemCopia: sem cópia salva para https://www.shoppingchina.com.py/site/search?query=u8000&page=1 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Alemania Cell: ERRO: SemCopia: sem cópia salva para https://www.alemaniacell.com/catalogo?q=u8000 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Tecnostore: ERRO: SemCopia: sem cópia salva para https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=u8000&per_page=100&page=1 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Visuar: ERRO: SemCopia: sem cópia salva para https://visuar.com.py/tvs/smart-tv-32-a-50-pulgadas/?ajax=1&page=2 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Tienda Yankee: ERRO: SemCopia: sem cópia salva para https://tiendayankee.com/wp-json/wc/store/v1/products?search=u8000&per_page=100&page=1 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Bristol: ERRO: SemCopia: sem cópia salva para https://www.bristol.com.py/televisores-y-audio/televisores?marca=samsung&js=1&pag=2 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34    Tienda Móvil: ERRO: SemCopia: sem cópia salva para https://tiendamovil.com.py/shop/busqueda?controller=search&s=u8000&ajax=1&resultsPerPage=100&page=1 (rode uma vez: python3 coletor.py --real)
+2026-11-11 21:22:34 Cotação: 1 US$ = Gs. 6.750 (última salva)
+2026-11-11 21:22:34 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-11 21:22:34 Nissei                    0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://nissei.com/graphql (rode uma vez: python3 col
+2026-11-11 21:22:34 Mega Eletrônicos          0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.megaeletronicos.com/producto/buscar?searc
+2026-11-11 21:22:34 Shopping China            0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.shoppingchina.com.py/site/search?query=u8
+2026-11-11 21:22:34 Alemania Cell             0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.alemaniacell.com/catalogo?q=u8000 (rode u
+2026-11-11 21:22:34 Tecnostore                0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://tecnostore.com.py/v2/wp-json/wc/store/v1/prod
+2026-11-11 21:22:34 Visuar                    0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://visuar.com.py/tvs/smart-tv-32-a-50-pulgadas/?
+2026-11-11 21:22:34 Tienda Yankee             0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://tiendayankee.com/wp-json/wc/store/v1/products
+2026-11-11 21:22:34 Bristol                   0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://www.bristol.com.py/televisores-y-audio/televi
+2026-11-11 21:22:34 Tienda Móvil              0          0        0        0      0s  ERRO: SemCopia: sem cópia salva para https://tiendamovil.com.py/shop/busqueda?controller=s
+2026-11-11 21:22:34 Total: 0 produtos · 0 pedidos · 0 segundos · 9 loja(s) com problema
+2026-11-11 21:22:35 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-minimalista.html
+2026-11-11 21:22:35 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
+2026-11-11 21:22:35 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
+2026-11-11 21:22:53 === Coleta REAL 11/11/2026 (21:22) ===
+2026-11-11 21:26:10    Tecnostore: PARADA: timeout em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-11 21:26:10 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-11 21:26:10 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-11 21:26:10 Nissei                  147        147        5        0     23s  ok
+2026-11-11 21:26:10 Mega Eletrônicos        229        107       34        0    165s  ok
+2026-11-11 21:26:10 Shopping China          160        160       39        0    197s  ok
+2026-11-11 21:26:10 Alemania Cell            70         70       29        0    147s  ok
+2026-11-11 21:26:10 Tecnostore                0          0        2        0     26s  PARADA: timeout em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone
+2026-11-11 21:26:10 Visuar                   85         45       13        0     56s  ok
+2026-11-11 21:26:10 Tienda Yankee            24         17       29        0    126s  ok
+2026-11-11 21:26:10 Bristol                  49         49       18        0     93s  ok
+2026-11-11 21:26:10 Tienda Móvil             41         27       33        0    163s  ok
+2026-11-11 21:26:11 Total: 805 produtos · 202 pedidos · 198 segundos · 1 loja(s) com problema
+2026-11-11 21:26:46 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-minimalista.html
+2026-11-11 21:26:46 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
+2026-11-11 21:26:46 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
+2026-11-12 19:02:00 === Coleta REAL 12/11/2026 (19:02) ===
+2026-11-12 19:29:38    Nissei: MAC DORMIU: o computador dormiu 1002s durante o pedido a https://nissei.com/graphql
+2026-11-12 19:29:38    Mega Eletrônicos: MAC DORMIU: o computador dormiu 1002s durante o pedido a https://www.megaeletronicos.com/producto/buscar?search=iphone&page=1
+2026-11-12 19:29:38    Shopping China: MAC DORMIU: o computador dormiu 498s durante o pedido a https://www.shoppingchina.com.py/site/search?query=celular%20apple%20iphone&page=1
+2026-11-12 19:29:38    Tecnostore: MAC DORMIU: o computador dormiu 497s durante o pedido a https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-12 19:29:38    Visuar: MAC DORMIU: o computador dormiu 1002s durante o pedido a https://visuar.com.py/celulares/iphone/?ajax=1&page=1
+2026-11-12 19:29:38    Bristol: MAC DORMIU: o computador dormiu 1002s durante o pedido a https://www.bristol.com.py/celulares-y-smartwatches/celulares?marca=apple
+2026-11-12 19:29:38 Cotação: 1 US$ = Gs. 6.750 (última salva)
+2026-11-12 19:29:38 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-12 19:29:38 Nissei                    0          0        2        0   1009s  MAC DORMIU: o computador dormiu 1002s durante o pedido a https://nissei.com/graphql
+2026-11-12 19:29:38 Mega Eletrônicos          0          0        2        0   1008s  MAC DORMIU: o computador dormiu 1002s durante o pedido a https://www.megaeletronicos.com/p
+2026-11-12 19:29:38 Shopping China            0          0        3        0   1529s  MAC DORMIU: o computador dormiu 498s durante o pedido a https://www.shoppingchina.com.py/s
+2026-11-12 19:29:38 Alemania Cell            70         70       29        0   1651s  ok
+2026-11-12 19:29:38 Tecnostore                0          0        2        0   1525s  MAC DORMIU: o computador dormiu 497s durante o pedido a https://tecnostore.com.py/v2/wp-js
+2026-11-12 19:29:38 Visuar                    0          0        2        0   1007s  MAC DORMIU: o computador dormiu 1002s durante o pedido a https://visuar.com.py/celulares/i
+2026-11-12 19:29:38 Tienda Yankee            25         18       29        0   1626s  ok
+2026-11-12 19:29:38 Bristol                   0          0        2        0   1008s  MAC DORMIU: o computador dormiu 1002s durante o pedido a https://www.bristol.com.py/celula
+2026-11-12 19:29:38 Tienda Móvil             40         27       32        0   1658s  ok
+2026-11-12 19:29:38 Total: 135 produtos · 103 pedidos · 1658 segundos · 6 loja(s) com problema
+2026-11-12 19:29:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-minimalista.html
+2026-11-12 19:29:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante.html
+2026-11-12 19:29:38 Página atualizada: /Users/lucas.valladares/monitor-precos/relatorio-vibrante-es.html
+2026-11-12 19:29:38 Publicação: NÃO feita — o Mac dormiu durante a coleta e 6 loja(s) ficaram sem dados (Nissei, Mega Eletrônicos, Shopping China, Tecnostore, Visuar, Bristol). O site continua com a coleta anterior. Com o Mac acordado, rode de novo: python3 coletor.py --real

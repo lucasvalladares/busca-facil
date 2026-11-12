@@ -1,0 +1,222 @@
+{
+  "iPhone 13": {
+    "arquivo": "fotos/iphone-13.jpg",
+    "corPrincipal": true,
+    "origem": "IPHONE 13 128GB ROSA SEMINUEVO"
+  },
+  "iPhone 13 Pro": {
+    "arquivo": "fotos/iphone-13-pro.jpg",
+    "corPrincipal": false,
+    "origem": "CELULAR APPLE IPHONE 13 PRO 128GB GRAPHITE CPO"
+  },
+  "iPhone 14 Plus": {
+    "arquivo": "fotos/iphone-14-plus.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 14 PLUS 256GB PURPLE"
+  },
+  "iPhone 15": {
+    "arquivo": "fotos/iphone-15.webp",
+    "corPrincipal": true,
+    "origem": "IPHONE 15 128GB ROSA C/CHIP SEMINUEVO"
+  },
+  "iPhone 15 Pro": {
+    "arquivo": "fotos/iphone-15-pro.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 15 PRO 512GB NATURAL ESIM - CHIP VIRTUAL"
+  },
+  "iPhone 16": {
+    "arquivo": "fotos/iphone-16.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 16 A3287 128GB ULTRAMARINE SIM"
+  },
+  "iPhone 16 Plus": {
+    "arquivo": "fotos/iphone-16-plus.jpg",
+    "corPrincipal": false,
+    "origem": "Apple iPhone 16 Plus A3290 128 GB MXVU3BE/A - Negro"
+  },
+  "iPhone 16 Pro Max": {
+    "arquivo": "fotos/iphone-16-pro-max.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 16 PRO MAX A3084 256GB DESERT TITANIUM ESIM - CHIP VIRTUAL"
+  },
+  "iPhone 16e": {
+    "arquivo": "fotos/iphone-16e.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 16E 128GB WHITE CPO"
+  },
+  "iPhone 17": {
+    "arquivo": "fotos/iphone-17.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 17 A3258 MG4A4LL/A 256GB SAGE"
+  },
+  "iPhone 17 Pro": {
+    "arquivo": "fotos/iphone-17-pro.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 17 PRO A3256 MG7P4LL/A 512GB COSMIC ORANGE"
+  },
+  "iPhone 17 Pro Max": {
+    "arquivo": "fotos/iphone-17-pro-max.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 17 PRO MAX A3525 MFYD4J/A 512GB COSMIC ORANGE"
+  },
+  "iPhone 17e": {
+    "arquivo": "fotos/iphone-17e.jpg",
+    "corPrincipal": true,
+    "origem": "Apple iPhone 17e A3634 Dual 256 GB - Rosa"
+  },
+  "iPhone 18 Pro": {
+    "arquivo": "fotos/iphone-18-pro.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 18 PRO A3472 MJQ54LL/A 256GB BURGUNDY"
+  },
+  "iPhone 18 Pro Max": {
+    "arquivo": "fotos/iphone-18-pro-max.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE 18 PRO MAX A3473 MJWA4LL/A 512GB BURGUNDY"
+  },
+  "iPhone Air": {
+    "arquivo": "fotos/iphone-air.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE AIR A3260 MG1D4LL/A 256GB SKY BLUE"
+  },
+  "iPhone Duo": {
+    "arquivo": "fotos/iphone-duo.jpg",
+    "corPrincipal": true,
+    "origem": "CELULAR APPLE IPHONE DUO 512GB NIGHT SKY ESIM"
+  },
+  "iPhone 13 Pro Max": {
+    "arquivo": "fotos/iphone-13-pro-max.jpg",
+    "corPrincipal": false,
+    "origem": "Celular Apple iPhone 13 Pro Max 256GB Swap"
+  },
+  "iPhone 14": {
+    "arquivo": "fotos/iphone-14.png",
+    "corPrincipal": true,
+    "origem": "IPHONE 14 128GB LILA SEMINUEVO ESIM C/1 AÑO DE GARANTIA"
+  },
+  "iPhone 14 Pro": {
+    "arquivo": "fotos/iphone-14-pro.jpg",
+    "corPrincipal": false,
+    "origem": "IPHONE 14 PRO 128GB NEGRO ESIM SEMINUEVO"
+  },
+  "iPhone 14 Pro Max": {
+    "arquivo": "fotos/iphone-14-pro-max.jpg",
+    "corPrincipal": false,
+    "origem": "Celular Apple iPhone 14 Pro Max 256GB Esim Swap"
+  },
+  "iPhone 15 Pro Max": {
+    "arquivo": "fotos/iphone-15-pro-max.jpg",
+    "corPrincipal": false,
+    "origem": "Celular Apple iPhone 15 Pro Max 256GB ESIM CPO"
+  },
+  "iPhone 16 Pro": {
+    "arquivo": "fotos/iphone-16-pro.jpg",
+    "corPrincipal": true,
+    "origem": "IPHONE 16 PRO 1TB TITANIUM DESIERTO ESIM SEMINUEVO C/1 AÑO DE GARANTIA"
+  },
+  "iPhone 12 Pro Max": {
+    "arquivo": "fotos/iphone-12-pro-max.webp",
+    "corPrincipal": false,
+    "url": "https://shoppingchina.b-cdn.net/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNFd0RWc9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--9aa161e450f26c87adebf8c0c590c10e9510763f/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oTnlaWE5wZW1WZmRHOWZabWxzYkZzSWFRSElhUUhJZXdZNkRHZHlZWFpwZEhsSklndERaVzUwWlhJR09nWkZWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--5f8dd758c181ad66deae2936e69fa86c8f746658/978236.jpg"
+  },
+  "iPhone 15 Plus": {
+    "arquivo": "fotos/iphone-15-plus.jpg",
+    "corPrincipal": false,
+    "url": "https://tiendayankee.com/wp-content/uploads/2026/04/15-plus-green.jpg"
+  },
+  "Acer Nitro V 15": {
+    "arquivo": "fotos/acer-nitro-v-15.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/u/I/uIZSiKc32M2FTDnGgvajfsU3pu0Ob2R2c2D.jpg"
+  },
+  "Lenovo LOQ": {
+    "arquivo": "fotos/lenovo-loq.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/n/o/notebook-gamer-lenovo-loq-83s0007fus-15-6-ryzen-7-170-16-gb-nvidia-geforce-rtx-4050-6-gb-anti-glare_001.jpg"
+  },
+  "MacBook Air 13\" M5": {
+    "arquivo": "fotos/macbook-air-13-m5.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/1/7/1772557506_1956919_2.jpg"
+  },
+  "MacBook Pro 14\" M5": {
+    "arquivo": "fotos/macbook-pro-14-m5.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/1/7/1772558127_1956940_1_-_copia_1.jpg"
+  },
+  "MacBook Pro 16\" M5": {
+    "arquivo": "fotos/macbook-pro-16-m5.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/s/l/slver_1.jpg"
+  },
+  "Redmi Note 15 4G": {
+    "arquivo": "fotos/redmi-note-15-4g.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/G/z/GznWUeBIeja6sfgzjCUXMDxESg7Cm3ZVsSY.jpg"
+  },
+  "Redmi Note 15 Pro 5G": {
+    "arquivo": "fotos/redmi-note-15-pro-5g.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/c/e/celer_image_11_-_2026-01-12t144206.078.jpg"
+  },
+  "ASUS TUF Gaming F16": {
+    "arquivo": "fotos/asus-tuf-gaming-f16.jpg",
+    "corPrincipal": false,
+    "url": "https://f.fcdn.app/imgs/6e0de6/www.bristol.com.py/brispy/ad8f/original/catalogo/BS3611729_BS3611729_1/480x480/notebook-gamer-asus-tuf-gaming-f16-32gb-1tb-fx608jmr-16-intel-core-i7-notebook-gamer-asus-tuf-gaming-f16-32gb-1tb-fx608jmr-16-intel-core-i7.jpg"
+  },
+  "Galaxy A07 4G": {
+    "arquivo": "fotos/galaxy-a07-4g.webp",
+    "corPrincipal": false,
+    "url": "https://resource.megaeletronicos.com/uploads/Product/new/1/5/7/4/1/9/157419/1768831395_1768831395.webp"
+  },
+  "Galaxy A17 5G": {
+    "arquivo": "fotos/galaxy-a17-5g.webp",
+    "corPrincipal": false,
+    "url": "https://resource.megaeletronicos.com/uploads/Product/new/1/5/2/0/1/8/152018/1757502528_1757502528.webp"
+  },
+  "Galaxy A36": {
+    "arquivo": "fotos/galaxy-a36.jpg",
+    "corPrincipal": false,
+    "url": "https://visuar.com.py/47580-large_default/combo-celular-samsung-galaxy-a36-5g-6128gb-samsung-galaxy-buds-core.jpg"
+  },
+  "Galaxy A56": {
+    "arquivo": "fotos/galaxy-a56.webp",
+    "corPrincipal": false,
+    "url": "https://resource.megaeletronicos.com/uploads/Product/new/1/5/4/4/2/9/154429/1761825056_1761825056.webp"
+  },
+  "Galaxy A57": {
+    "arquivo": "fotos/galaxy-a57.webp",
+    "corPrincipal": false,
+    "url": "https://resource.megaeletronicos.com/uploads/Product/new/1/6/0/0/7/4/160074/1773759652_1773759652.webp"
+  },
+  "Galaxy S26 Ultra": {
+    "arquivo": "fotos/galaxy-s26-ultra.webp",
+    "corPrincipal": false,
+    "url": "https://resource.megaeletronicos.com/uploads/Product/new/1/5/9/2/3/0/159230/1772628715_1772628715.webp"
+  },
+  "LG NanoCell NANO80": {
+    "arquivo": "fotos/lg-nanocell-nano80.jpg",
+    "corPrincipal": false,
+    "url": "https://f.fcdn.app/imgs/56dfc5/www.bristol.com.py/brispy/9d8e/original/catalogo/BS3555359_BS3555359_1/480x480/tv-lg-86-4k-webos-86nano80asa-tv-lg-86-4k-webos-86nano80asa.jpg"
+  },
+  "LG NanoCell NU800": {
+    "arquivo": "fotos/lg-nanocell-nu800.webp",
+    "corPrincipal": false,
+    "url": "https://shoppingchina.b-cdn.net/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBOGNFSEE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--fe1b35ae2d043a1876c5d0a8d4ec6ddd93fe4ea6/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oTnlaWE5wZW1WZmRHOWZabWxzYkZzSWFRSElhUUhJZXdZNkRHZHlZWFpwZEhsSklndERaVzUwWlhJR09nWkZWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--5f8dd758c181ad66deae2936e69fa86c8f746658/1119418.jpg"
+  },
+  "Samsung Crystal U8000": {
+    "arquivo": "fotos/samsung-crystal-u8000.webp",
+    "corPrincipal": false,
+    "url": "https://shoppingchina.b-cdn.net/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBLytWRlE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--df31acf8fbf4d588b9bf34bde5213a21115d160f/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBPZ2wzWldKd09oTnlaWE5wZW1WZmRHOWZabWxzYkZzSWFRSElhUUhJZXdZNkRHZHlZWFpwZEhsSklndERaVzUwWlhJR09nWkZWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--5f8dd758c181ad66deae2936e69fa86c8f746658/997724.jpg"
+  },
+  "Samsung Mini LED M70H": {
+    "arquivo": "fotos/samsung-mini-led-m70h.jpg",
+    "corPrincipal": false,
+    "url": "https://nissei.com/media/catalog/product/cache/74c1057f7991b4edb2bc7bdaa94de933/t/v/tv-smart-mini-led-samsung-m70h-un5om7ohbfxza-50-4k-uhd-60-hz-tizen-negro_001.jpg"
+  },
+  "Samsung QLED Q7F": {
+    "arquivo": "fotos/samsung-qled-q7f.webp",
+    "corPrincipal": false,
+    "url": "https://resource.megaeletronicos.com/uploads/Product/new/1/6/5/0/2/9/165029/1784215397_1784215397.webp"
+  }
+}

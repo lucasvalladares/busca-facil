@@ -1,0 +1,99 @@
+User-agent: *
+
+Sitemap: https://www.bristol.com.py/sitemap.xml
+
+# Áreas privadas / transaccionales
+Disallow: /carrito
+Disallow: /checkout
+Disallow: /pago
+Disallow: /mi-cuenta
+Disallow: /ingresar
+Disallow: /salir
+Disallow: /login
+Disallow: /signup
+Disallow: /register
+Disallow: /wishlist
+Disallow: /wish-list
+Disallow: /compare
+Disallow: /comparar
+Disallow: /pedido
+Disallow: /track
+Disallow: /seguimiento
+Disallow: /devoluciones
+Disallow: /cambios
+Disallow: /giftcard
+Disallow: /tarjeta
+Disallow: /vale
+
+# Backend / técnica
+
+Disallow: /admin
+Disallow: /backend
+Disallow: /panel
+Disallow: /ajax
+Disallow: /api
+Disallow: /feed
+Disallow: /preview
+Disallow: /oauth
+Disallow: /auth
+
+# Búsqueda interna (NO indexable)
+
+Disallow: /buscar
+Disallow: /search
+Disallow: /*?*q=
+Disallow: /*?*search=
+Disallow: /*?*s=
+Disallow: /*?*busqueda=
+
+# Tracking y parámetros de campañas
+
+Disallow: /*?*utm_source=
+Disallow: /*?*utm_medium=
+Disallow: /*?*utm_campaign=
+Disallow: /*?*utm_term=
+Disallow: /*?*utm_content=
+Disallow: /*?*gclid=
+Disallow: /*?*fbclid=
+Disallow: /*?*_ga=
+Disallow: /*?*_gl=
+Disallow: /*?*msclkid=
+Disallow: /*?*yclid=
+
+# Ordenamientos y control de crawl budget
+
+Disallow: /*?*
+Disallow: /*?*ord=
+Disallow: /*?*order=
+Disallow: /*?*orderby=
+Disallow: /*?*dir=
+Disallow: /*?*cat=
+
+
+# Filtros no indexables (parámetros de navegación sin valor orgánico)
+
+Disallow: /*?*color=
+Disallow: /*?*con-stock=
+Disallow: /*?*con-descuento=
+
+# ==============================================================================
+# FASE 2: APERTURA SELECTIVA PARA FILTROS SEO (EXCEPCIONES)
+# Estas reglas permiten el rastreo de parámetros estratégicos con intención de compra.
+# ==============================================================================
+
+Allow: /*?*marca=
+Allow: /*?*pulgadas=
+Allow: /*?*memoria=
+Allow: /*?*ram=
+Allow: /*?*capacidad=
+Allow: /*?*tipo=
+
+
+# Paginación (se maneja con rel/canonical, no con indexación)
+Disallow: /*?*page=
+Disallow: /*?*p=
+
+# Blog
+Disallow: /blog*?*pag=
+Disallow: /blog*?*categ=
+Disallow: /blog*?*tag=

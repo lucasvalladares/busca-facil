@@ -1,0 +1,12 @@
+# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+Sitemap: https://shoppingchina.com.py/sitemap.xml
+# Sitemap: https://shoppingchina.com.py/sitemap_br.xml
+
+User-agent: *
+Disallow: /br
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Googlebot-image
+Disallow:

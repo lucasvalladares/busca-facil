@@ -1,0 +1,95 @@
+# Reglas Globales para todos los Bots
+User-agent: *
+
+# --- Directorios de Sistema y Magento ---
+Disallow: /lib/
+Disallow: /*.php$
+Disallow: /pkginfo/
+Disallow: /report/
+Disallow: /var/
+Disallow: /catalog/
+Disallow: /sendfriend/
+Disallow: /review/
+Disallow: /app/
+Disallow: /bin/
+Disallow: /dev/
+Disallow: /phpserver/
+Disallow: /pub/
+Disallow: /setup/
+Disallow: /update/
+Disallow: /vendor/
+
+# --- Checkout y Cuentas (Protección de recursos) ---
+Disallow: /checkout/
+Disallow: /onestepcheckout/
+Disallow: /customer/
+Disallow: /customer/account/
+Disallow: /customer/account/login/
+Disallow: /sales/
+Disallow: /wishlist/
+
+# --- BUSCADOR Y FILTROS (Aquí está la clave del CPU) ---
+# Bloquear la búsqueda interna para evitar ataques de bots
+Disallow: /catalogsearch/
+Disallow: /catalog/product_compare/
+Disallow: /catalog/category/view/
+Disallow: /catalog/product/view/
+Disallow: /search/
+Disallow: /advanced/
+
+# Bloquear parámetros de URL que consumen recursos (visto en tus logs)
+Disallow: /*?q=
+Disallow: /*&q=
+Disallow: /*shopbyAjax=
+Disallow: /*is_scroll=
+Disallow: /*am_on_sale=
+Disallow: /*price=
+Disallow: /*cat=
+Disallow: /*SID=
+Disallow: /*PHPSESSID=
+
+# Filtros de ordenamiento (Duplicate Content)
+Disallow: /*?dir=
+Disallow: /*&dir=
+Disallow: /*?limit=
+Disallow: /*&limit=
+Disallow: /*?mode=
+Disallow: /*&mode=
+Disallow: /*?order=
+Disallow: /*&order=
+
+# --- Archivos Técnicos ---
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /CONTRIBUTING.md
+Disallow: /CONTRIBUTOR_LICENSE_AGREEMENT.html
+Disallow: /COPYING.txt
+Disallow: /Gruntfile.js
+Disallow: /LICENSE.txt
+Disallow: /LICENSE_AFL.txt
+Disallow: /nginx.conf.sample
+Disallow: /package.json
+Disallow: /php.ini.sample
+Disallow: /RELEASE_NOTES.txt
+Disallow: /api.php
+Disallow: /cron.php
+Disallow: /cron.sh
+Disallow: /error_log
+Disallow: /get.php
+Disallow: /install.php
+Disallow: /LICENSE.html
+Disallow: /README.txt
+
+# --- Permitir recursos estáticos para que Google renderice bien ---
+Allow: /pub/media/
+Allow: /pub/static/
+
+# --- Bots de Publicidad (Google Ads) ---
+# A veces Ads necesita verificar la URL final, le damos permiso parcial
+User-agent: AdsBot-Google
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+# --- Sitemaps ---
+Sitemap: https://nissei.com/sitemap/sitemappy.xml
+Sitemap: https://nissei.com/sitemap/sitemapbr.xml

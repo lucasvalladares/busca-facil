@@ -1,0 +1,86 @@
+{
+  "_como_usar": "Para monitorar um produto novo, acrescente um item em 'produtos'. 'tem': todas estas expressões precisam aparecer no nome do anúncio; 'nao_tem': nenhuma pode aparecer; 'termos': buscas feitas em cada loja; 'variacao': o que diferencia as versões (armazenamento | polegadas | gpu); 'tamanhos': polegadas aceitas (só TVs); 'codigo': trecho do código do modelo que vem logo depois das polegadas (ex.: QN55QN85F). Depois rode: python3 testes.py",
+
+  "categorias": [
+    {"id": "celulares", "nome": "Celulares", "linhas": ["iPhone", "Samsung", "Xiaomi"]},
+    {"id": "notebooks", "nome": "Notebooks", "linhas": ["MacBook", "Gamer"]},
+    {"id": "tvs", "nome": "TVs", "linhas": ["Samsung", "LG"]}
+  ],
+
+  "listagens_por_loja": {
+    "_motivo": "Nestas lojas o robots.txt proíbe a busca; usamos estas categorias permitidas.",
+    "Visuar": ["celulares/iphone", "celulares/xiaomi", "celulares/samsung",
+               "tvs/smart-tv-32-a-50-pulgadas", "tvs/smart-tv-55-pulgadas", "tvs/smart-tv-65-pulgadas"],
+    "Bristol": ["celulares-y-smartwatches/celulares?marca=apple", "celulares-y-smartwatches/celulares?marca=xiaomi",
+                "celulares-y-smartwatches/celulares?marca=samsung",
+                "tecnologia/informatica/notebooks?marca=apple", "tecnologia/informatica/notebooks?marca=lenovo",
+                "tecnologia/informatica/notebooks?marca=acer", "tecnologia/informatica/notebooks?marca=asus",
+                "tecnologia/informatica/notebooks?marca=dell",
+                "televisores-y-audio/televisores?marca=samsung", "televisores-y-audio/televisores?marca=lg"]
+  },
+
+  "produtos": [
+    {"nome": "iPhone (todos os modelos)", "categoria": "celulares", "linha": "iPhone", "reconhecedor": "iphone",
+     "termos": ["iphone"]},
+
+    {"nome": "Redmi Note 15 Pro 5G", "categoria": "celulares", "linha": "Xiaomi", "serie": "Redmi Note 15",
+     "termos": ["redmi note 15"], "tem": ["redmi\\s+note\\s*15\\s*pro\\b", "\\b5g\\b"],
+     "nao_tem": ["redmi\\s+note\\s*15\\s*pro\\s*(\\+|plus)"], "variacao": "armazenamento"},
+    {"nome": "Redmi Note 15 5G", "categoria": "celulares", "linha": "Xiaomi", "serie": "Redmi Note 15",
+     "termos": ["redmi note 15"], "tem": ["redmi\\s+note\\s*15\\b", "\\b5g\\b"], "nao_tem": ["redmi\\s+note\\s*15\\s*pro"],
+     "variacao": "armazenamento"},
+    {"nome": "Redmi Note 15 4G", "categoria": "celulares", "linha": "Xiaomi", "serie": "Redmi Note 15",
+     "termos": ["redmi note 15"], "tem": ["redmi\\s+note\\s*15\\b"], "nao_tem": ["redmi\\s+note\\s*15\\s*pro", "\\b5g\\b"],
+     "variacao": "armazenamento"},
+    {"nome": "Redmi 15 5G", "categoria": "celulares", "linha": "Xiaomi", "serie": "Redmi 15",
+     "termos": ["redmi 15"], "tem": ["redmi\\s+15\\b", "\\b5g\\b"], "variacao": "armazenamento"},
+
+    {"nome": "MacBook (Air e Pro)", "categoria": "notebooks", "linha": "MacBook", "reconhecedor": "macbook",
+     "termos": ["macbook"],
+     "modelos": [["Air", 13, 5], ["Air", 15, 4], ["Air", 13, 4], ["Pro", 14, 5], ["Pro", 16, 5]]},
+
+    {"nome": "Lenovo LOQ", "categoria": "notebooks", "linha": "Gamer", "serie": "Lenovo", "termos": ["loq"],
+     "tem": ["\\bloq\\b"], "nao_tem": ["\\b(mochila|bolso|maleta|sleeve|funda|teclado|mouse|hub|cooler|skin|glasses|lentes|consola|go)\\b"],
+     "variacao": "gpu"},
+    {"nome": "ASUS TUF Gaming F16", "categoria": "notebooks", "linha": "Gamer", "serie": "ASUS", "termos": ["tuf"],
+     "tem": ["\\btuf\\b.*(\\bf16\\b|fx60\\d)|(\\bf16\\b|fx60\\d).*\\btuf\\b"],
+     "nao_tem": ["\\b(mochila|bolso|maleta|sleeve|funda|teclado|mouse|hub|cooler|skin|glasses|lentes|consola|go)\\b"],
+     "variacao": "gpu"},
+    {"nome": "Acer Nitro V 15", "categoria": "notebooks", "linha": "Gamer", "serie": "Acer", "termos": ["nitro"],
+     "tem": ["nitro\\s*v\\s*-?\\s*15\\b|\\ban?v15|\\bavn15"],
+     "nao_tem": ["\\b(mochila|bolso|maleta|sleeve|funda|teclado|mouse|hub|cooler|skin|glasses|lentes|consola|go)\\b"],
+     "variacao": "gpu"},
+    {"nome": "Dell G15", "categoria": "notebooks", "linha": "Gamer", "serie": "Dell", "termos": ["dell g15"],
+     "tem": ["\\bdell\\b.*\\bg15\\b"],
+     "nao_tem": ["\\b(mochila|bolso|maleta|sleeve|funda|teclado|mouse|hub|cooler|skin|glasses|lentes|consola|go)\\b"],
+     "variacao": "gpu"},
+    {"nome": "Lenovo Legion Pro 5i", "categoria": "notebooks", "linha": "Gamer", "serie": "Lenovo", "termos": ["legion pro"],
+     "tem": ["legion\\s+pro\\s*5"],
+     "nao_tem": ["\\b(mochila|bolso|maleta|sleeve|funda|teclado|mouse|hub|cooler|skin|glasses|lentes|consola|go)\\b"],
+     "variacao": "gpu"},
+
+    {"nome": "Galaxy S26 Ultra", "categoria": "celulares", "linha": "Samsung", "serie": "Galaxy S", "termos": ["galaxy s26 ultra"],
+     "tem": ["samsung|galaxy", "\\bs26\\s*ultra\\b"], "variacao": "armazenamento"},
+    {"nome": "Galaxy A57", "categoria": "celulares", "linha": "Samsung", "serie": "Galaxy A", "termos": ["galaxy a57"],
+     "tem": ["samsung|galaxy", "\\ba57\\b"], "variacao": "armazenamento"},
+    {"nome": "Galaxy A56", "categoria": "celulares", "linha": "Samsung", "serie": "Galaxy A", "termos": ["galaxy a56"],
+     "tem": ["samsung|galaxy", "\\ba56\\b"], "variacao": "armazenamento"},
+    {"nome": "Galaxy A36", "categoria": "celulares", "linha": "Samsung", "serie": "Galaxy A", "termos": ["galaxy a36"],
+     "tem": ["samsung|galaxy", "\\ba36\\b"], "variacao": "armazenamento"},
+    {"nome": "Galaxy A17 5G", "categoria": "celulares", "linha": "Samsung", "serie": "Galaxy A", "termos": ["galaxy a17"],
+     "tem": ["samsung|galaxy", "\\ba17\\b", "\\b5g\\b"], "variacao": "armazenamento"},
+    {"nome": "Galaxy A07 4G", "categoria": "celulares", "linha": "Samsung", "serie": "Galaxy A", "termos": ["galaxy a07"],
+     "tem": ["samsung|galaxy", "\\ba07\\b"], "nao_tem": ["\\b5g\\b"], "variacao": "armazenamento"},
+
+    {"nome": "Samsung Crystal U8000", "categoria": "tvs", "linha": "Samsung", "serie": "Crystal UHD", "termos": ["u8000"],
+     "tem": ["samsung|\\bun\\d{2}", "u8000"], "codigo": "u8000", "variacao": "polegadas", "tamanhos": [43, 50, 55, 65, 75, 85]},
+    {"nome": "Samsung Mini LED M70H", "categoria": "tvs", "linha": "Samsung", "serie": "Mini LED", "termos": ["m70h"],
+     "tem": ["m70h"], "codigo": "m70h", "variacao": "polegadas", "tamanhos": [43, 50, 55, 65, 75, 85]},
+    {"nome": "Samsung QLED Q7F", "categoria": "tvs", "linha": "Samsung", "serie": "QLED", "termos": ["q7f"],
+     "tem": ["q7f"], "codigo": "(?:qn)?q7f", "variacao": "polegadas", "tamanhos": [43, 50, 55, 65, 75, 85]},
+    {"nome": "LG NanoCell NANO80", "categoria": "tvs", "linha": "LG", "serie": "NanoCell", "termos": ["nano80"],
+     "tem": ["nano\\s*80"], "codigo": "nano\\s*80", "variacao": "polegadas", "tamanhos": [43, 50, 55, 65, 75, 86]},
+    {"nome": "LG NanoCell NU800", "categoria": "tvs", "linha": "LG", "serie": "NanoCell", "termos": ["nu800"],
+     "tem": ["nu800"], "codigo": "nu800", "variacao": "polegadas", "tamanhos": [43, 50, 55, 65, 75, 85]}
+  ]
+}

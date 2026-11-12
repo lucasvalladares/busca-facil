@@ -1,0 +1,89 @@
+# Coleta diária de preços + publicação do site, rodando no GitHub (grátis em repositório público).
+# Não depende de nenhum computador ligado.
+#
+# Todo dia às 19h do Paraguai (22h UTC; o GitHub pode atrasar alguns minutos):
+#   1. testes (sem internet)  2. coleta real  3. guarda o banco no repositório  4. publica o site
+#
+# Para rodar na mão: aba Actions > "Coleta diária" > Run workflow.
+
+name: Coleta diária
+
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "O que fazer"
+        type: choice
+        default: coleta
+        options: [coleta, so-publicar, checar-conexao]
+
+permissions:
+  contents: write   # guardar o banco atualizado
+  pages: write      # publicar o site
+  id-token: write
+
+concurrency:
+  group: coleta
+  cancel-in-progress: false
+
+env:
+  TZ: America/Asuncion      # datas e horas no horário do Paraguai
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  coleta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Checar conexão com as lojas
+        if: github.event.inputs.modo == 'checar-conexao'
+        run: python3 checar_conexao.py
+
+      - name: Testes (sem internet)
+        if: github.event.inputs.modo != 'checar-conexao'
+        continue-on-error: true    # um teste quebrado não impede a coleta do dia
+        run: python3 testes.py
+
+      - name: Coleta real
+        if: github.event.inputs.modo == 'coleta' || github.event_name == 'schedule'
+        run: |
+          python3 coletor.py --real --sem-publicar || true
+          {
+            echo '### Resumo da coleta'
+            echo '```'
+            grep -A15 "Cotação:" coleta.log | tail -n 16 | cut -c21-
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar banco atualizado
+        if: github.event.inputs.modo == 'coleta' || github.event_name == 'schedule'
+        run: |
+          git config user.name "busca-facil-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add precos.db fotos coleta.log
+          git diff --cached --quiet || git commit -m "Coleta de preços $(date '+%d/%m/%Y %H:%M')"
+          git push
+
+      - name: Montar site
+        if: github.event.inputs.modo != 'checar-conexao'
+        run: python3 -c "import pagina, publicar; pagina.gerar(); publicar.montar_site()"
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event.inputs.modo != 'checar-conexao'
+        with:
+          path: site
+
+      - id: deploy
+        if: github.event.inputs.modo != 'checar-conexao'
+        uses: actions/deploy-pages@v4
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
