@@ -86,6 +86,16 @@ Depois de mudar, `git add -A && git commit -m "..." && git push`.
 deixa o banco local diferente do GitHub — evite. O agendamento antigo do Mac (launchd) foi desligado;
 o arquivo `com.monitorprecos.coleta.plist` ficou só como referência.
 
+## Painel interno e avisos no celular
+
+- **Painel interno:** https://lucasvalladares.github.io/busca-facil/painel.html — pede senha.
+  Mostra quantos produtos subiram/baixaram de preço em relação à coleta anterior (com loja e %),
+  e quanto tempo levou cada coleta. Os dados vão **criptografados** (AES-256); sem a senha não dá para ler.
+  A senha fica no segredo `PAINEL_SENHA` do GitHub (Settings → Secrets and variables → Actions).
+  Sem esse segredo, o painel simplesmente não é publicado. Para ver localmente sem senha: `python3 painel.py`.
+- **Avisos no celular:** ao fim de cada coleta (✅ ok, ⚠️ problema em alguma loja, ❌ falhou), pelo app gratuito
+  **ntfy** (iPhone/Android), assinando o tópico guardado no segredo `NTFY_TOPICO`. Tocar no aviso abre o painel.
+
 ## Site público (GitHub Pages)
 
 - **Endereço:** https://lucasvalladares.github.io/busca-facil/
