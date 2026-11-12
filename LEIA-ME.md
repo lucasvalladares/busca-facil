@@ -7,7 +7,8 @@
 | `coletor.py` | Visita as lojas, salva os preços no banco e atualiza a página. **É o único que você precisa rodar.** |
 | `normalizar.py` | Transforma nomes como `CEL IPHONE 16 6.1" 8GB+128GB` em `iPhone 16 128GB` e identifica a condição (Novo / Recondicionado / Sem lacre). |
 | `pagina.py` | Prepara os dados, baixa as fotos e monta as páginas `relatorio-minimalista.html` e `relatorio-vibrante.html`. |
-| `template-minimalista.html` / `template-vibrante.html` | O visual de cada versão. As cores ficam no topo de cada arquivo. |
+| `template-vibrante.html` | As telas do site (categorias, filtros, detalhe, gráfico). Vale para todas as versões. |
+| `estilo-minimalista.css` | O visual da versão minimalista (clean): mesma página, só outro estilo. Mudanças nas telas valem para as duas. |
 | `fontes/` | Fontes Inter e Anton (para funcionar sem internet). |
 | `cores_principais.py` | A cor principal de cada modelo, usada para escolher a foto. Edite aqui para trocar. |
 | `fotos/` | Fotos dos modelos, baixadas uma vez das lojas (para a página funcionar sem internet). |
@@ -129,7 +130,7 @@ sqlite3 -header -column ~/monitor-precos/precos.db "SELECT data, loja, modelo, p
 - O que entra em cada um é decidido pelo nome do anúncio, em `normalizar.py` (listas `MACBOOKS` e `GAMERS`).
   As buscas feitas em cada loja ficam em `coletor.py` (lista `TERMOS`).
 - Variação comparada entre lojas: armazenamento (celulares), chip + SSD (MacBook) e placa de vídeo (gamer).
-- A versão minimalista continua mostrando só iPhones.
+- A versão minimalista mostra tudo o que a vibrante mostra (todas as categorias); só o visual muda.
 
 ## Limitações conhecidas
 

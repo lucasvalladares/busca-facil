@@ -24,9 +24,10 @@ PASTA = os.path.dirname(os.path.abspath(__file__))
 BANCO = os.path.join(PASTA, "precos.db")
 # Versões visuais da página: cada uma tem seu template e gera seu próprio arquivo.
 VERSOES = {
-    "minimalista": "template-minimalista.html",
+    "minimalista": "template-vibrante.html",   # mesma página, com o estilo de estilo-minimalista.css
     "vibrante": "template-vibrante.html",
 }
+ESTILO_MINIMALISTA = os.path.join(PASTA, "estilo-minimalista.css")
 PASTA_FOTOS = os.path.join(PASTA, "fotos")
 PASTA_SAIDA = PASTA  # onde as páginas são gravadas (o simular.py muda para teste/)
 
@@ -246,6 +247,11 @@ def gerar(baixar_fotos=False):
             continue
         with open(caminho_template, encoding="utf-8") as f:
             modelo_html = f.read()
+        if nome == "minimalista":   # troca só o bloco <style>: telas e funções ficam iguais às da vibrante
+            with open(ESTILO_MINIMALISTA, encoding="utf-8") as f:
+                css = f.read()
+            ini, fim = modelo_html.index("<style>") + len("<style>"), modelo_html.index("</style>")
+            modelo_html = modelo_html[:ini] + "\n" + css + modelo_html[fim:]
         saida = os.path.join(PASTA_SAIDA, "relatorio-%s.html" % nome)
         with open(saida, "w", encoding="utf-8") as f:
             f.write(modelo_html.replace("__DADOS__", js))

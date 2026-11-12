@@ -413,7 +413,7 @@ function selo(pai, linhas, giro, pequeno) {
   }
   el('svg:path', {d: d + 'Z'}, svg);
   const txt = el('span', {'aria-hidden': 'true'}, s);
-  linhas.forEach((l, i) => { if (i) txt.appendChild(document.createElement('br')); txt.append(l); });
+  linhas.forEach((l, i) => { if (i) { txt.append(' '); txt.appendChild(document.createElement('br')); } txt.append(l); });
   return s;
 }
 // Onda na borda inferior de uma seção (preenchida com a cor da seção seguinte)
@@ -595,7 +595,7 @@ function paginaInicio() {
     }
     el('div', {class: 'apartir'}, a, 'A partir de');
     el('div', {class: 'preco-grande'}, a, preco(Math.min(...doCat.map(m => maisBarata(m, 'Novo').hoje[0].preco))));
-    const b = el('span', {class: 'botao botao-azul'}, a, 'Ver ' + rot(cat.nome).toLowerCase() + ' ');
+    const b = el('span', {class: 'botao botao-azul'}, a, 'Ver ' + (/^[A-Z]{2}/.test(cat.nome) ? rot(cat.nome) : rot(cat.nome).toLowerCase()) + ' ');
     el('span', {class: 'seta', 'aria-hidden': 'true'}, b, '→');
   });
   onda(sec, 'var(--azul)');
