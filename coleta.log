@@ -164,3 +164,22 @@
 2026-11-12 19:37:21 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
 2026-11-12 19:37:21 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
 2026-11-12 19:37:21 Publicação: pulada (--sem-publicar).
+2026-11-13 19:41:57 === Coleta REAL 13/11/2026 (19:41) ===
+2026-11-13 19:45:58    Mega Eletrônicos: PARADA: HTTP 403 em https://www.megaeletronicos.com/robots.txt
+2026-11-13 19:45:58 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-13 19:45:58 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-13 19:45:58 Nissei                  138        138        5        0     23s  ok
+2026-11-13 19:45:58 Mega Eletrônicos          0          0        1        0      1s  PARADA: HTTP 403 em https://www.megaeletronicos.com/robots.txt
+2026-11-13 19:45:58 Shopping China          154        154       40        0    241s  ok
+2026-11-13 19:45:58 Alemania Cell            72         72       29        0    132s  ok
+2026-11-13 19:45:58 Tecnostore               95         87       27        0    151s  ok
+2026-11-13 19:45:58 Visuar                   84         45       13        0     53s  ok
+2026-11-13 19:45:58 Tienda Yankee            25         18       29        0    135s  ok
+2026-11-13 19:45:58 Bristol                  49         49       18        0     82s  ok
+2026-11-13 19:45:58 Tienda Móvil             41         26       32        0    139s  ok
+2026-11-13 19:45:58 Total: 658 produtos · 194 pedidos · 241 segundos · 1 loja(s) com problema
+2026-11-13 19:45:58 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista.html
+2026-11-13 19:45:58 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista-es.html
+2026-11-13 19:45:58 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
+2026-11-13 19:45:58 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
+2026-11-13 19:45:58 Publicação: pulada (--sem-publicar).
