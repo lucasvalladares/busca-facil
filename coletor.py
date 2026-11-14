@@ -419,8 +419,14 @@ def main():
     log("=== %s %s (%s) ===" % (modo, agora.strftime("%d/%m/%Y"), hora))
 
     pausadas = {l: m for l, m in con.execute("SELECT loja, motivo FROM pausas WHERE data = ?", (data,))} if real else {}
+    # --loja "Mega": coleta só essa loja; as outras lojas do dia (ex.: coletadas pelo GitHub) ficam intactas
+    so_loja = sys.argv[sys.argv.index("--loja") + 1].lower() if "--loja" in sys.argv else None
+    if so_loja and "--ignorar-pausa" in sys.argv:   # pausa registrada por OUTRA conexão (ex.: GitHub bloqueado)
+        pausadas = {}
     lojas = []
     for loja, funcao in LOJAS:
+        if so_loja and so_loja not in loja.lower():
+            continue
         if loja in pausadas:
             log("   %s: pausada hoje (%s) — não será acessada até amanhã" % (loja, pausadas[loja]))
         else:
@@ -432,12 +438,16 @@ def main():
     # Cotação: a que a Nissei publicou nesta coleta; se não veio, a última salva
     cambio = next((r["cambio"] for r in resultados if r["cambio"]), None)
     fonte = "Nissei"
-    if not cambio:
+    hoje = con.execute("SELECT gs_por_usd FROM cambio WHERE data = ?", (data,)).fetchone()
+    if not cambio and so_loja and hoje:
+        cambio, fonte = hoje[0], None   # coleta de uma loja só: mantém a cotação de hoje como está
+    elif not cambio:
         ultima = con.execute("SELECT gs_por_usd FROM cambio ORDER BY data DESC LIMIT 1").fetchone()
         if not ultima:
             sys.exit("Sem cotação do dólar e nenhuma salva antes.")
         cambio, fonte = ultima[0], "última salva"
-    con.execute("INSERT OR REPLACE INTO cambio VALUES (?,?,?,?)", (data, hora, cambio, fonte))
+    if fonte:
+        con.execute("INSERT OR REPLACE INTO cambio VALUES (?,?,?,?)", (data, hora, cambio, fonte))
 
     fotos = {m: (u, cp) for m, u, cp in con.execute("SELECT modelo, url, cor_principal FROM fotos")}
     for r in resultados:
@@ -479,7 +489,7 @@ def main():
     total = time.time() - inicio
 
     # Resumo
-    log("Cotação: 1 US$ = Gs. %s (%s)" % ("{:,.0f}".format(cambio).replace(",", "."), fonte))
+    log("Cotação: 1 US$ = Gs. %s (%s)" % ("{:,.0f}".format(cambio).replace(",", "."), fonte or "a de hoje, já salva"))
     log("%-17s %9s %10s %8s %8s %7s  %s" % ("Loja", "produtos", "em estoque", "pedidos", "robots", "tempo", "situação"))
     for r in resultados:
         situacao = ("PARADA: " if r["parada"] else "SUSPEITA: " if r["suspeita"] else "MAC DORMIU: " if r.get("dormiu")
@@ -497,7 +507,7 @@ def main():
         lojas_com_problema = [r["loja"] for r in resultados if r["erro"]]
         avisar("Busca Fácil: %d loja(s) com problema na coleta" % erros,
                ", ".join(lojas_com_problema) + ". Detalhes em coleta.log")
-    if real:   # resumo para o aviso no celular (notificar.py)
+    if real and not so_loja:   # resumo para o aviso no celular (notificar.py)
         with open(os.path.join(PASTA, "ultima-coleta.json"), "w", encoding="utf-8") as f:
             json.dump({"data": data, "hora": hora, "segundos": round(total),
                        "produtos": sum(len(r["linhas"]) for r in resultados),
