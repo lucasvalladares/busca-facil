@@ -72,8 +72,8 @@ Para coletar sem publicar o site: `python3 coletor.py --real --sem-publicar`.
 ## Coleta automática: roda no GitHub (o Mac pode ficar desligado)
 
 Desde 12/11/2026 a coleta **não roda mais no Mac**. Quem roda é o **GitHub Actions**, de graça
-(o repositório é público), todo dia **de madrugada, por volta das 4h30 do Paraguai** (horário sorteado entre ~4h20 e 4h40, e o GitHub às vezes
-atrasa alguns minutos). De madrugada os sites das lojas estão quase sem visitas.
+(o repositório é público), todo dia **de madrugada, num horário sorteado entre 2h e 5h do Paraguai** (hora e minuto mudam a cada dia;
+o GitHub às vezes atrasa alguns minutos). De madrugada os sites das lojas estão quase sem visitas.
 
 A cada execução o GitHub: roda os testes → faz a coleta real (mesmas regras de educação) →
 guarda o `precos.db` atualizado no repositório → monta e publica o site.
@@ -85,7 +85,7 @@ guarda o `precos.db` atualizado no repositório → monta e publica o site.
   - `so-publicar` — só gera e publica o site com os dados que já existem (ex.: depois de mudar o visual);
   - `checar-conexao` — 1–2 pedidos por loja, para ver se alguma está bloqueando o GitHub.
 - **Aviso por e-mail:** o GitHub manda e-mail se uma execução falhar por completo.
-- **Mudar o horário:** linha `cron` em `.github/workflows/coleta.yml` (está em UTC: 7h20 UTC = 4h20 PY).
+- **Mudar o horário:** linha `cron` em `.github/workflows/coleta.yml` (está em UTC: 5h UTC = 2h PY; a espera sorteada de até 3 h fica no passo "Coleta real").
 - **Desligar:** Actions → "Coleta diária" → botão "…" → Disable workflow.
 - **Atenção:** o GitHub desliga agendamentos de repositórios sem atividade por 60 dias; como a
   coleta grava um commit por dia, isso não deve acontecer.

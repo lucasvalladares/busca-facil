@@ -1,8 +1,9 @@
 # Coleta diária de preços + publicação do site, rodando no GitHub (grátis em repositório público).
 # Não depende de nenhum computador ligado.
 #
-# Todo dia de madrugada, entre ~4h20 e 4h40 do Paraguai (7h20 UTC + espera sorteada de até 15 min;
-# o GitHub também pode atrasar alguns minutos). De madrugada os sites das lojas estão quase sem visitas.
+# Todo dia de madrugada, num horário SORTEADO entre 2h e 5h do Paraguai: o GitHub inicia às 2h (5h UTC)
+# e a coleta espera de 0 a 3 horas (hora e minuto sorteados a cada dia; o GitHub também pode atrasar
+# alguns minutos o início). De madrugada os sites das lojas estão quase sem visitas.
 #   1. testes (sem internet)  2. coleta real  3. guarda o banco no repositório  4. publica o site
 #   5. painel interno (criptografado)  6. aviso no celular (ntfy)
 #
@@ -12,7 +13,7 @@ name: Coleta diária
 
 on:
   schedule:
-    - cron: "20 7 * * *"
+    - cron: "0 5 * * *"
   workflow_dispatch:
     inputs:
       modo:
@@ -37,7 +38,7 @@ env:
 jobs:
   coleta:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 240   # inclui a espera sorteada (até 3 h)
     steps:
       - uses: actions/checkout@v4
 
@@ -57,8 +58,12 @@ jobs:
       - name: Coleta real
         if: github.event.inputs.modo == 'coleta' || github.event_name == 'schedule'
         run: |
-          # horário diferente a cada dia (0–15 min), para não chegar sempre no mesmo segundo
-          if [ "${{ github.event_name }}" = "schedule" ]; then sleep $((RANDOM % 900)); fi
+          # horário sorteado a cada dia: espera de 0 a 3 h (início entre 2h e 5h do Paraguai)
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            espera=$((RANDOM % 10800))
+            echo "Coleta sorteada para daqui a $((espera / 3600)) h $(((espera % 3600) / 60)) min"
+            sleep $espera
+          fi
           python3 coletor.py --real --sem-publicar || true
           {
             echo '### Resumo da coleta'
