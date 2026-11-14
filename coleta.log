@@ -183,3 +183,24 @@
 2026-11-13 19:45:58 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
 2026-11-13 19:45:58 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
 2026-11-13 19:45:58 Publicação: pulada (--sem-publicar).
+2026-11-14 19:36:09 === Coleta REAL 14/11/2026 (19:36) ===
+2026-11-14 19:40:01    Nissei: SUSPEITA: queda suspeita: 35 produtos hoje contra 138 em 2026-11-13 — o site pode ter mudado; dados de hoje descartados, mantidos os anteriores
+2026-11-14 19:40:01    Mega Eletrônicos: PARADA: HTTP 403 em https://www.megaeletronicos.com/robots.txt
+2026-11-14 19:40:01    Tecnostore: PARADA: TimeoutError em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-14 19:40:01 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-14 19:40:01 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-14 19:40:01 Nissei                   35         35        5        0     20s  SUSPEITA: queda suspeita: 35 produtos hoje contra 138 em 2026-11-13 — o site pode ter muda
+2026-11-14 19:40:01 Mega Eletrônicos          0          0        1        0      1s  PARADA: HTTP 403 em https://www.megaeletronicos.com/robots.txt
+2026-11-14 19:40:01 Shopping China          151        151       40        0    232s  ok
+2026-11-14 19:40:01 Alemania Cell            73         73       30        0    135s  ok
+2026-11-14 19:40:01 Tecnostore                0          0        2        0     25s  PARADA: TimeoutError em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=i
+2026-11-14 19:40:01 Visuar                   84         45       13        0     51s  ok
+2026-11-14 19:40:01 Tienda Yankee            25         18       29        0    138s  ok
+2026-11-14 19:40:01 Bristol                  49         49       18        0     78s  ok
+2026-11-14 19:40:01 Tienda Móvil             41         25       32        0    134s  ok
+2026-11-14 19:40:01 Total: 458 produtos · 170 pedidos · 232 segundos · 3 loja(s) com problema
+2026-11-14 19:40:01 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista.html
+2026-11-14 19:40:01 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista-es.html
+2026-11-14 19:40:01 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
+2026-11-14 19:40:01 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
+2026-11-14 19:40:01 Publicação: pulada (--sem-publicar).
