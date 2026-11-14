@@ -290,3 +290,13 @@ th { color: var(--tinta-suave); font-weight: 500; }
   .grupo { width: 100%; }
 }
 @media (max-width: 520px) { .hist-resumo { gap: 6px; } .hist-num { padding: 7px 6px; } .hist-num b { font-size: 13px; } .hist-num .r, .hist-num .s { font-size: 10.5px; } }
+
+/* Histórico por loja */
+.loja-card h3 { font-size: 24px; }
+.loja-card .apartir { margin-top: 10px; }
+.atalho-lojas { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 20px; padding: 18px 20px; text-decoration: none; }
+.atalho-lojas b { display: block; font-size: 16px; font-weight: 600; }
+.atalho-lojas span:not(.botao):not(.seta) { color: var(--tinta-suave); font-size: 14px; }
+.preco-antigo { opacity: .55; }
+.comparar-lojas { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--linha-card); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; font-size: 14px; }
+.link-loja { font-weight: 600; color: var(--azul); }

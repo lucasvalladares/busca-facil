@@ -167,6 +167,14 @@ input[type=search] { min-width: 220px; }
 .categoria-card .linhas { color: var(--tinta-suave); font-weight: 700; margin-top: 6px; }
 .categoria-card .stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; color: var(--tinta-suave); }
 .categoria-card .botao-azul { align-self: flex-start; margin-top: 18px; }
+.loja-card h3 { font-size: 44px; }
+.loja-card .apartir { margin-top: 10px; }
+.atalho-lojas { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-top: 28px; padding: 22px 28px; text-decoration: none; }
+.atalho-lojas b { display: block; font-size: 20px; }
+.atalho-lojas span:not(.botao):not(.seta) { color: var(--tinta-suave); }
+.preco-antigo { opacity: .55; }
+.comparar-lojas { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--linha-card); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.comparar-lojas .link-loja, .link-loja { font-weight: 700; color: inherit; }
 
 /* ---------- Detalhe ---------- */
 .pagina-detalhe .card { border: var(--borda-detalhe); }
@@ -330,6 +338,7 @@ th { color: var(--tinta-suave); }
     <a class="link" href="#/c/celulares">Celulares</a>
     <a class="link" href="#/c/notebooks">Notebooks</a>
     <a class="link" href="#/c/tvs">TVs</a>
+    <a class="link" href="#/lojas">Lojas</a>
     <a class="link" href="#/" data-ir="como">Como funciona</a>
     <span class="data" id="data-cab"></span>
     <div class="moeda" role="group" aria-label="Moeda"><button type="button" data-moeda="PYG">Gs.</button><button type="button" data-moeda="USD">US$</button></div>
@@ -469,7 +478,7 @@ function analisar(v) {
   const media = l => l.reduce((s, p) => s + p.preco, 0) / l.length;
   const limite = iso(t(DADOS.ultimaData) - (JANELA_TERMOMETRO - 1) * DIA);
   const pts = todos.filter(p => p.data >= limite);
-  const m40 = media(pts), atual = v.hoje[0].preco;
+  const m40 = media(pts), atual = v.hoje.length ? v.hoje[0].preco : (todos.length ? todos[todos.length - 1].preco : NaN);
   const variacao = (atual - m40) / m40;
   const classe = variacao < -0.10 ? 'barato' : variacao > 0.10 ? 'caro' : 'normal';
   return {atual, media: m40, media12: media(todos), variacao, classe, dias: pts.length,
@@ -536,8 +545,14 @@ function rota() {
     const modelo = DADOS.modelos.find(x => x.slug === m[1]);
     if (modelo) { paginaDetalhe(modelo, params.get('c'), params.get('a'), params.get('cor')); rodape(); window.scrollTo({top: mesmaPagina ? y : 0, behavior: 'instant'}); return; }
   }
+  const ml = caminho.match(/^\/loja\/([\w-]+)(?:\/([\w-]+))?/);
+  const loja = ml && DADOS.lojas.find(l => slugLoja(l) === ml[1]);
   const mc = caminho.match(/^\/c\/([\w-]+)/);
-  if (mc) paginaCategoria(mc[1], params.get('preco')); else paginaInicio();
+  if (loja && ml[2] && DADOS.modelos.some(x => x.slug === ml[2]))
+    paginaProdutoNaLoja(loja, DADOS.modelos.find(x => x.slug === ml[2]), params.get('c'), params.get('a'));
+  else if (loja) paginaLoja(loja);
+  else if (caminho === '/lojas') paginaLojas();
+  else if (mc) paginaCategoria(mc[1], params.get('preco')); else paginaInicio();
   rodape();
   window.scrollTo({top: mesmaPagina ? y : 0, behavior: 'instant'});
 }
@@ -598,6 +613,12 @@ function paginaInicio() {
     const b = el('span', {class: 'botao botao-azul'}, a, 'Ver ' + (/^[A-Z]{2}/.test(cat.nome) ? rot(cat.nome) : rot(cat.nome).toLowerCase()) + ' ');
     el('span', {class: 'seta', 'aria-hidden': 'true'}, b, '→');
   });
+  const al = el('a', {class: 'card atalho-lojas', href: '#/lojas'}, ms);
+  const alt = el('div', null, al);
+  el('b', null, alt, 'Histórico de preço por loja');
+  el('span', null, alt, 'Escolha uma loja e veja como o preço de cada produto mudou nela.');
+  const alb = el('span', {class: 'botao botao-azul'}, al, 'Ver lojas ');
+  el('span', {class: 'seta', 'aria-hidden': 'true'}, alb, '→');
   onda(sec, 'var(--azul)');
 }
 
@@ -897,7 +918,16 @@ function paginaDetalhe(m, condPedida, armPedido, corPedida) {
   // ---- indicador + gráfico ----
   const an = analisar(v);
   const g2b = el('div', {class: 'det-grade-2'}, ms);
-  const ind = el('div', {class: 'card indicador'}, g2b);
+  cartaoIndicador(g2b, v, an, null);
+  const hc = el('div', {class: 'card'}, g2b);
+  el('h2', null, hc, 'Histórico de preços');
+  graficoPrecos(hc, v, an);
+  onda(sec, 'var(--azul)');
+}
+
+// Cartão "O preço está bom?". loja = null: menor preço entre as lojas; com loja: só o preço daquela loja.
+function cartaoIndicador(pai, v, an, loja) {
+  const ind = el('div', {class: 'card indicador'}, pai);
   const sd = seloDaOferta(v);
   if (sd) selo(ind, sd, -8);
   el('h2', null, ind, 'O preço está bom?');
@@ -913,15 +943,204 @@ function paginaDetalhe(m, condPedida, armPedido, corPedida) {
   const rr = el('div', {class: 'regua-rot'}, ind);
   ['Barato', 'Normal', 'Caro'].forEach(x => el('span', null, rr, x));
   const dl = el('dl', {class: 'numeros'}, ind);
-  el('dt', null, dl, 'Menor preço hoje'); el('dd', null, dl, preco(an.atual));
-  el('dt', null, dl, 'Média dos últimos 40 dias'); el('dd', null, dl, preco(an.media));
+  if (loja) { el('dt', null, dl, 'Preço hoje nesta loja'); el('dd', null, dl, preco(an.atual)); el('dt', null, dl, 'Média desta loja (40 dias)'); }
+  else { el('dt', null, dl, 'Menor preço hoje'); el('dd', null, dl, preco(an.atual)); el('dt', null, dl, 'Média dos últimos 40 dias'); }
+  el('dd', null, dl, preco(an.media));
   el('dt', null, dl, 'Dias com dados (de 40)'); el('dd', null, dl, String(an.dias));
   if (an.dias < MIN_DIAS_ETIQUETA) el('div', {class: 'nota'}, ind, 'Só ' + an.dias + (an.dias === 1 ? ' dia' : ' dias') + ' de histórico: o indicador fica confiável depois de algumas semanas.');
-  el('div', {class: 'nota'}, ind, 'Barato: mais de 10% abaixo da média. Normal: até 10% para mais ou para menos. Caro: mais de 10% acima. A média considera o menor preço de cada dia nos últimos 40 dias.');
+  el('div', {class: 'nota'}, ind, loja ? 'Barato: mais de 10% abaixo da média desta loja. Normal: até 10% para mais ou para menos. Caro: mais de 10% acima. A média considera só o preço desta loja em cada dia dos últimos 40 dias.'
+    : 'Barato: mais de 10% abaixo da média. Normal: até 10% para mais ou para menos. Caro: mais de 10% acima. A média considera o menor preço de cada dia nos últimos 40 dias.');
+  return ind;
 
+}
+
+// ============================================================
+// HISTÓRICO POR LOJA — a loja é o ponto de partida
+// ============================================================
+const slugLoja = l => l.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// Variante só com os preços de UMA loja (mesmo formato: a análise e o gráfico são os mesmos do site)
+function naLoja(v, loja) {
+  return {condicao: v.condicao, armazenamento: v.armazenamento, series: {[loja]: v.series[loja] || []},
+          hoje: v.hoje.filter(o => o.loja === loja), semOfertaHoje: []};
+}
+// Produtos (modelo + variante + condição) com preço guardado nesta loja nos últimos 12 meses
+const memoLoja = {};
+function produtosDaLoja(loja) {
+  if (!memoLoja[loja]) {
+    memoLoja[loja] = [];
+    DADOS.modelos.forEach(m => m.variantes.forEach(v => {
+      const s = v.series[loja];
+      if (s && s.some(p => p[0] >= DADOS.inicioJanela)) memoLoja[loja].push({m, v, vl: naLoja(v, loja)});
+    }));
+  }
+  return memoLoja[loja];
+}
+function heroSimples(titulo, sub, voltarTexto, voltarHref) {
+  const hero = el('section', {class: 'hero'}, app);
+  estrelas(hero, [[84, 12, 28, 0], [70, 52, 16, .8], [94, 70, 20, 1.5], [55, 14, 12, 2.1]]);
+  const mi = el('div', {class: 'miolo'}, hero);
+  botao(mi, voltarTexto, 'botao-contorno', null, voltarHref).querySelector('.seta').remove();
+  el('div', {class: 'espaco-voltar'}, mi);
+  el('h1', {class: 'titulo-gigante menor'}, mi, titulo);
+  if (sub) el('p', {class: 'chamada'}, mi, sub);
+  onda(hero, 'var(--azul-2)');
+  return mi;
+}
+
+function paginaLojas() {
+  document.title = 'Histórico por loja · Busca Fácil';
+  heroSimples('Histórico por loja', 'Escolha uma loja para ver os produtos que ela vende e como o preço de cada um mudou ali.',
+    '← Início', '#/');
+  const sec = el('section', {class: 'secao-cartoes'}, app);
+  const ms = el('div', {class: 'miolo'}, sec);
+  const grade = el('div', {class: 'categorias'}, ms);
+  DADOS.lojas.forEach(loja => {
+    const lista = produtosDaLoja(loja);
+    if (!lista.length) return;
+    const hoje = lista.filter(x => x.vl.hoje.length);
+    const a = el('a', {class: 'card categoria-card loja-card', href: '#/loja/' + slugLoja(loja)}, grade);
+    const fotos = el('div', {class: 'fotos'}, a);
+    const usadas = new Set();
+    lista.forEach(({m}) => { if (m.foto && !usadas.has(m.foto) && usadas.size < 3) { usadas.add(m.foto); el('img', {src: m.foto, alt: '', loading: 'lazy'}, fotos); } });
+    el('h3', null, a, loja);
+    el('div', {class: 'linhas'}, a, DADOS.categorias.filter(c => lista.some(x => x.m.categoria === c.id)).map(c => rot(c.nome)).join(' · '));
+    const st = el('div', {class: 'stats'}, a);
+    st.append(lista.length + ' produtos com histórico · ' + hoje.length + ' à venda hoje');
+    const baratos = hoje.filter(x => { const an = analisar(x.vl); return an.dias >= MIN_DIAS_ETIQUETA && an.classe === 'barato'; }).length;
+    if (baratos) {
+      const b = el('span', {class: 'etiqueta etiqueta-barato'}, st);
+      el('span', {'aria-hidden': 'true'}, b, '↓ '); b.append(baratos + ' abaixo do normal hoje');
+    }
+    const ult = DADOS.status.find(x => x.loja === loja);
+    if (ult) el('div', {class: 'apartir'}, a, 'Última coleta: ' + dataLonga(ult.data_hora.slice(0, 10)) + (ult.status === 'erro' ? ' · com problema' : ''));
+    const b = el('span', {class: 'botao botao-azul'}, a, 'Ver produtos ');
+    el('span', {class: 'seta', 'aria-hidden': 'true'}, b, '→');
+  });
+  onda(sec, 'var(--azul)');
+}
+
+const filtroLoja = {loja: '', categoria: '', condicao: '', situacao: 'hoje', busca: ''};
+function paginaLoja(loja) {
+  document.title = loja + ' · Busca Fácil';
+  const lista = produtosDaLoja(loja);
+  if (filtroLoja.loja !== loja) Object.assign(filtroLoja, {loja, categoria: '', condicao: '', situacao: lista.some(x => x.vl.hoje.length) ? 'hoje' : '', busca: ''});
+  heroSimples(loja, lista.length + ' produtos com histórico de preço nesta loja. Escolha um para ver o gráfico e se o preço está bom aqui.',
+    '← Todas as lojas', '#/lojas');
+  const sec = el('section', {class: 'secao-cartoes'}, app);
+  const ms = el('div', {class: 'miolo'}, sec);
+  const barra = el('div', {class: 'filtros filtros-carrossel'}, ms);
+  const grupo = (rotulo) => { const g = el('div', {class: 'grupo'}, barra); el('span', {class: 'rotulo'}, g, rotulo);
+    return el('div', {class: 'opcoes', role: 'group', 'aria-label': rotulo}, g); };
+  const segCat = grupo('Categoria'), segCond = grupo('Condição'), segSit = grupo('Situação');
+  const gb = el('div', {class: 'grupo'}, barra);
+  const busca = el('input', {type: 'search', placeholder: 'Buscar modelo', 'aria-label': 'Buscar modelo'}, gb);
+  busca.value = filtroLoja.busca;
+  const passa = (x, f) => (!f.categoria || x.m.categoria === f.categoria) && (!f.condicao || x.v.condicao === f.condicao)
+    && (!f.situacao || x.vl.hoje.length) && f.busca.toLowerCase().split(/\s+/).filter(Boolean).every(t => x.m.modelo.toLowerCase().includes(t));
+  const contar = f => lista.filter(x => passa(x, f)).length;
+  function opcoes(seg, chave, valores) {
+    seg.textContent = '';
+    let n0 = 0;
+    valores.forEach(([k, texto]) => {
+      const n = contar({...filtroLoja, [chave]: k});
+      if (k && !n && k !== filtroLoja[chave]) return;
+      if (k) n0++;
+      const b = el('button', {type: 'button', 'aria-pressed': k === filtroLoja[chave]}, seg, texto);
+      el('span', {class: 'n'}, b, n);
+      b.onclick = () => { filtroLoja[chave] = k; atualizar(); };
+    });
+    seg.parentElement.style.display = n0 > 1 || filtroLoja[chave] ? '' : 'none';
+  }
+  const grade = el('div', {class: 'catalogo'}, ms);
+  function atualizar() {
+    opcoes(segCat, 'categoria', [['', 'Todas'], ...DADOS.categorias.map(c => [c.id, rot(c.nome)])]);
+    opcoes(segCond, 'condicao', [['', 'Todas'], ...DADOS.condicoes.map(c => [c, rot(c)])]);
+    opcoes(segSit, 'situacao', [['hoje', 'À venda hoje'], ['', 'Todos com histórico']]);
+    segSit.parentElement.style.display = '';
+    grade.textContent = '';
+    const vis = lista.filter(x => passa(x, filtroLoja));
+    if (!vis.length) { el('div', {class: 'vazio'}, grade, 'Nenhum produto com esses filtros.'); return; }
+    vis.forEach(({m, v, vl}, i) => {
+      const a = el('a', {class: 'produto card', href: '#/loja/' + slugLoja(loja) + '/' + m.slug + '?c=' + encodeURIComponent(v.condicao) + '&a=' + encodeURIComponent(v.armazenamento)}, grade);
+      const topo = el('div', {class: 'topo'}, a);
+      const f = el('div', {class: 'foto'}, topo);
+      if (m.foto) el('img', {src: m.foto, alt: '', loading: 'lazy'}, f);
+      const info = el('div', null, topo);
+      el('h3', null, info, m.modelo);
+      el('div', {class: 'arm'}, info, rot(v.armazenamento) + ' · ' + rot(v.condicao));
+      const s = vl.series[loja];
+      if (vl.hoje.length) {
+        const sd = seloDaOferta(vl);
+        if (sd) selo(a, sd, i % 2 ? 8 : -9, true);
+        el('div', {class: 'apartir'}, a, 'Preço hoje');
+        el('div', {class: 'preco-grande'}, a, preco(vl.hoje[0].preco));
+        a.classList.add('cartao-' + etiquetaPreco(el('div', {class: 'etiquetas'}, a), vl));
+      } else {
+        const u = s[s.length - 1];
+        el('div', {class: 'apartir'}, a, 'Último preço · ' + dataLonga(u[0]));
+        el('div', {class: 'preco-grande preco-antigo'}, a, preco(u[1]));
+        el('span', {class: 'etiqueta etiqueta-coletando'}, el('div', {class: 'etiquetas'}, a), 'Sem oferta hoje');
+      }
+      el('div', {class: 'loja'}, a, s.length + (s.length === 1 ? ' dia com preço' : ' dias com preço'));
+      const b = el('span', {class: 'botao botao-azul'}, a, 'Ver histórico ');
+      el('span', {class: 'seta', 'aria-hidden': 'true'}, b, '→');
+    });
+  }
+  busca.oninput = () => { filtroLoja.busca = busca.value; atualizar(); };
+  atualizar();
+  onda(sec, 'var(--azul)');
+}
+
+function paginaProdutoNaLoja(loja, m, condPedida, armPedido) {
+  const daqui = produtosDaLoja(loja).filter(x => x.m === m);
+  if (!daqui.length) { paginaLoja(loja); return; }
+  const conds = DADOS.condicoes.filter(c => daqui.some(x => x.v.condicao === c));
+  const cond = conds.includes(condPedida) ? condPedida : conds[0];
+  const vs = daqui.filter(x => x.v.condicao === cond);
+  const x = vs.find(y => y.v.armazenamento === armPedido) || vs[0];
+  const {v, vl} = x;
+  document.title = m.modelo + ' na ' + loja + ' · Busca Fácil';
+  const link = (c, a) => '#/loja/' + slugLoja(loja) + '/' + m.slug + '?c=' + encodeURIComponent(c) + '&a=' + encodeURIComponent(a);
+  const mi = heroSimples(m.modelo, null, '← ' + loja, '#/loja/' + slugLoja(loja));
+  el('div', {class: 'linha-sub'}, mi, [rot(v.armazenamento), rot(cond), loja].join(' · '));
+  const barra = el('div', {class: 'filtros filtros-carrossel'}, mi);
+  const g1 = el('div', {class: 'grupo'}, barra);
+  el('span', {class: 'rotulo'}, g1, rot(m.rotuloVariante));
+  const segA = el('div', {class: 'opcoes', role: 'group', 'aria-label': rot(m.rotuloVariante)}, g1);
+  vs.forEach(y => { const b = el('button', {type: 'button', 'aria-pressed': y === x}, segA, rot(y.v.armazenamento)); b.onclick = () => { location.hash = link(cond, y.v.armazenamento); }; });
+  if (conds.length > 1) {
+    const g2 = el('div', {class: 'grupo'}, barra);
+    el('span', {class: 'rotulo'}, g2, 'Condição');
+    const segC = el('div', {class: 'opcoes', role: 'group', 'aria-label': 'Condição'}, g2);
+    conds.forEach(c => { const b = el('button', {type: 'button', 'aria-pressed': c === cond}, segC, rot(c)); b.onclick = () => { location.hash = link(c, v.armazenamento); }; });
+  }
+
+  const sec = el('section', {class: 'secao-cartoes pagina-detalhe'}, app);
+  const ms = el('div', {class: 'miolo'}, sec);
+  const an = analisar(vl);
+  const g2b = el('div', {class: 'det-grade-2'}, ms);
+  let ind;
+  if (vl.hoje.length) {
+    ind = cartaoIndicador(g2b, vl, an, loja);
+  } else {
+    const s = vl.series[loja], u = s[s.length - 1];
+    ind = el('div', {class: 'card indicador'}, g2b);
+    el('h2', null, ind, 'O preço está bom?');
+    el('div', {class: 'veredito'}, ind, 'Sem oferta hoje');
+    el('div', {class: 'var-texto'}, ind, 'Último preço nesta loja: ' + preco(u[1]) + ' em ' + dataLonga(u[0]) + '.');
+  }
+  // comparação com as outras lojas hoje
+  const cmp = el('div', {class: 'comparar-lojas'}, ind);
+  if (v.hoje.length) {
+    const melhor = v.hoje[0], aqui = vl.hoje[0];
+    if (aqui && melhor.loja === loja) el('div', null, cmp, 'Hoje esta loja tem o menor preço entre ' + v.hoje.length + (v.hoje.length === 1 ? ' loja.' : ' lojas.'));
+    else el('div', null, cmp, 'Menor preço hoje entre as lojas: ' + preco(melhor.preco) + ' na ' + melhor.loja + (aqui ? ' (' + pct((aqui.preco - melhor.preco) / melhor.preco) + ' aqui).' : '.'));
+    botao(cmp, 'Comparar todas as lojas', 'botao-azul', null, '#/modelo/' + m.slug + '?c=' + encodeURIComponent(cond) + '&a=' + encodeURIComponent(v.armazenamento));
+  }
+  if (vl.hoje.length) el('a', {class: 'link-loja', href: vl.hoje[0].link, target: '_blank', rel: 'noopener'}, cmp, 'Ver na loja →');
   const hc = el('div', {class: 'card'}, g2b);
-  el('h2', null, hc, 'Histórico de preços');
-  graficoPrecos(hc, v, an);
+  el('h2', null, hc, 'Histórico de preços nesta loja');
+  graficoPrecos(hc, vl, an);
   onda(sec, 'var(--azul)');
 }
 

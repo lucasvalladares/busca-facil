@@ -131,6 +131,9 @@ sqlite3 -header -column ~/monitor-precos/precos.db "SELECT data, loja, modelo, p
   As buscas feitas em cada loja ficam em `coletor.py` (lista `TERMOS`).
 - Variação comparada entre lojas: armazenamento (celulares), chip + SSD (MacBook) e placa de vídeo (gamer).
 - A versão minimalista mostra tudo o que a vibrante mostra (todas as categorias); só o visual muda.
+- **Histórico por loja** (menu "Lojas" ou atalho na página inicial, endereço `#/lojas`): escolhe a loja, vê os
+  produtos com preço guardado nela e, ao abrir um, o gráfico e o indicador Barato/Normal/Caro **só com os preços
+  daquela loja** (média dos últimos 40 dias da própria loja), além do menor preço do dia entre todas as lojas.
 
 ## Limitações conhecidas
 
