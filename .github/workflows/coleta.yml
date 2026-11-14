@@ -1,7 +1,8 @@
 # Coleta diária de preços + publicação do site, rodando no GitHub (grátis em repositório público).
 # Não depende de nenhum computador ligado.
 #
-# Todo dia às 19h do Paraguai (22h UTC; o GitHub pode atrasar alguns minutos):
+# Todo dia de madrugada, entre ~4h20 e 4h40 do Paraguai (7h20 UTC + espera sorteada de até 15 min;
+# o GitHub também pode atrasar alguns minutos). De madrugada os sites das lojas estão quase sem visitas.
 #   1. testes (sem internet)  2. coleta real  3. guarda o banco no repositório  4. publica o site
 #   5. painel interno (criptografado)  6. aviso no celular (ntfy)
 #
@@ -11,7 +12,7 @@ name: Coleta diária
 
 on:
   schedule:
-    - cron: "0 22 * * *"
+    - cron: "20 7 * * *"
   workflow_dispatch:
     inputs:
       modo:
@@ -56,6 +57,8 @@ jobs:
       - name: Coleta real
         if: github.event.inputs.modo == 'coleta' || github.event_name == 'schedule'
         run: |
+          # horário diferente a cada dia (0–15 min), para não chegar sempre no mesmo segundo
+          if [ "${{ github.event_name }}" = "schedule" ]; then sleep $((RANDOM % 900)); fi
           python3 coletor.py --real --sem-publicar || true
           {
             echo '### Resumo da coleta'

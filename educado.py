@@ -123,6 +123,9 @@ class Cliente:
         self.pedidos = 0          # pedidos feitos à internet (inclui robots.txt)
         self.pulados = 0          # endereços não acessados por causa do robots.txt
         self._ultimo = 0.0
+        self.intervalo = INTERVALO   # a coleta pode pedir um ritmo mais lento para uma loja
+        self.termos = None           # termos de busca desta loja hoje (None = todos)
+        self.por_termo = {}          # termo -> quantos produtos nossos a busca trouxe
         self._robots = {}         # site -> (regras, delay)
         self._trava = threading.Lock()
         self._pasta = os.path.join(FIXTURES, _slug(loja))
@@ -145,7 +148,7 @@ class Cliente:
 
     # ---- acesso à internet ----
     def _esperar_vez(self, extra=None):
-        intervalo = max(random.uniform(*INTERVALO), extra or 0)
+        intervalo = max(random.uniform(*self.intervalo), extra or 0)
         espera = self._ultimo + intervalo - time.time()
         if espera > 0:
             time.sleep(espera)

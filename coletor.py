@@ -4,6 +4,8 @@ Coletor de preços (celulares e notebooks) em lojas do Paraguai.
     python3 coletor.py                       # TESTE: usa só as cópias em fixtures/ (não acessa nenhum site)
     python3 coletor.py --real                # coleta de verdade, gera as páginas e publica o site
     python3 coletor.py --real --sem-publicar # coleta de verdade, sem publicar
+    python3 coletor.py --real --loja mega    # só uma loja (as outras do dia ficam como estão)
+    python3 coletor.py --real --forcar       # coleta de novo lojas já coletadas com sucesso hoje
     python3 coletor.py --reprocessar         # refaz a última coleta real a partir das cópias (sem acessar as lojas),
                                              # útil depois de ajustar o produtos.json; grava nos dados reais
 
@@ -57,6 +59,15 @@ PASTA_DEV = os.path.join(PASTA, "dev")
 ARQUIVO_LOG = os.path.join(PASTA, "coleta.log")
 IVA = 0.10
 LIMITE_QUEDA = 0.5   # se uma loja trouxer menos da metade dos produtos da última coleta dela: suspeita
+# Busca vazia: o termo que não trouxe nenhum produto nosso nas últimas DIAS_VAZIA checagens numa loja
+# deixa de ser buscado nela todo dia; é reconferido uma vez a cada DIAS_RECHECAR dias.
+DIAS_VAZIA = 7
+DIAS_RECHECAR = 7
+# Nissei: cada pedido junta 6 buscas; com pedidos a cada 3–5 s ela passa a devolver buscas vazias
+# (visto em 14/11/2026). Ritmo mais lento só para ela (são só 4–5 pedidos).
+INTERVALO_LOJA = {"Nissei": (15.0, 20.0)}
+# Resposta parcial: se tantas buscas que traziam produtos vierem vazias de uma vez, os dados do dia são descartados
+MIN_BUSCAS_SUMIDAS = 3
 
 # Buscas e categorias vêm do produtos.json; o reconhecimento de nomes (normalizar.py) decide o que entra.
 TERMOS = termos_de_busca()
@@ -106,6 +117,20 @@ def _paginas(cli, montar_url, ler, limite=20):
 # Lojas. Cada função recebe o cliente educado da loja e devolve (ofertas, cotação ou None).
 # --------------------------------------------------------------------------
 
+def _termos(cli):
+    return cli.termos if cli.termos is not None else TERMOS
+
+
+def _por_termo(cli, termos, endereco, ler):
+    """Uma busca por termo; guarda quantos produtos nossos cada termo trouxe (para pular buscas sempre vazias)."""
+    itens = []
+    for t in termos:
+        do_termo = _paginas(cli, endereco(t), ler)
+        cli.por_termo[t] = _reconhecidos(do_termo)
+        itens += do_termo
+    return itens
+
+
 def coletar_nissei(cli):
     campos = """items { name url_key stock_status image { url }
         price_range { minimum_price { final_price { value currency } } }
@@ -113,33 +138,54 @@ def coletar_nissei(cli):
             price_range { minimum_price { final_price { value currency } } } } } } }"""
     # GraphQL permite várias buscas num pedido (apelidos t0, t1...). A API da Nissei recusa consultas muito
     # complexas (erro 400 com as 20 buscas juntas): vão em grupos de até 6, com a cotação no primeiro.
-    POR_PEDIDO = 6
+    POR_PEDIDO, TAMANHO = 6, 100
+    termos = _termos(cli)
     d, cambio = {}, None
-    for inicio in range(0, len(TERMOS), POR_PEDIDO):
-        grupo = list(enumerate(TERMOS))[inicio:inicio + POR_PEDIDO]
-        consulta = "{ %s %s }" % (" ".join('t%d: products(search: "%s", pageSize: 100) { %s }' % (i, t, campos) for i, t in grupo),
-                                  "currency { exchange_rates { currency_to rate } }" if inicio == 0 else "")
+
+    def pedir(grupo, com_cambio):   # grupo: [(apelido, termo, página)]
+        nonlocal cambio
+        consulta = "{ %s %s }" % (" ".join('%s: products(search: "%s", pageSize: %d, currentPage: %d) { %s }'
+                                           % (a, t, TAMANHO, pg, campos) for a, t, pg in grupo),
+                                  "currency { exchange_rates { currency_to rate } }" if com_cambio else "")
         r = cli.get("https://nissei.com/graphql", dados=json.dumps({"query": consulta}),
                     cabecalhos={"Content-Type": "application/json", "Content-Currency": "PYG"})
         if r is None:
-            return [], None
-        parte = json.loads(r)["data"]
+            return False
+        parte = json.loads(r).get("data") or {}   # página além da última: a Nissei responde erro, sem dados
         if "currency" in parte:
             cambio = next((float(x["rate"]) for x in parte.pop("currency")["exchange_rates"]
                            if x["currency_to"] == "PYG" and x["rate"] > 1000), None)
         d.update(parte)
+        return True
+
+    lista = [("t%d" % i, t, 1) for i, t in enumerate(termos)]
+    for inicio in range(0, len(lista), POR_PEDIDO):
+        if not pedir(lista[inicio:inicio + POR_PEDIDO], inicio == 0):
+            return [], None
+    if cambio is None and not pedir([], True):   # nenhum termo hoje: só a cotação
+        return [], None
+    # busca que veio cheia (100): pode ter mais produtos — pede a página seguinte (até 3 páginas)
+    for pg in (2, 3):
+        cheias = [("t%dp%d" % (i, pg), t, pg) for i, t in enumerate(termos)
+                  if len((d.get("t%d" % i if pg == 2 else "t%dp%d" % (i, pg - 1)) or {}).get("items") or []) == TAMANHO]
+        for inicio in range(0, len(cheias), POR_PEDIDO):
+            pedir(cheias[inicio:inicio + POR_PEDIDO], False)
     itens = []
-    for i in range(len(TERMOS)):
-        for p in d["t%d" % i]["items"]:
-            link = "https://nissei.com/py/" + p["url_key"]
-            for o in [v["product"] for v in (p.get("variants") or [])] or [p]:
-                preco = o["price_range"]["minimum_price"]["final_price"]
-                if preco["currency"] != "PYG" or not preco["value"]:
-                    continue
-                img = ((o.get("image") or p.get("image") or {}).get("url") or "")
-                # Nissei mostra o preço com IVA; guardamos o preço exclusivo para estrangeiros (sem IVA)
-                itens.append(oferta(o["name"], o["stock_status"] == "IN_STOCK", link,
-                                    "" if "placeholder" in img else img, gs=preco["value"] / (1 + IVA)))
+    for i, t in enumerate(termos):
+        do_termo = []
+        for apelido in ["t%d" % i, "t%dp2" % i, "t%dp3" % i]:
+            for p in (d.get(apelido) or {}).get("items") or []:
+                link = "https://nissei.com/py/" + p["url_key"]
+                for o in [v["product"] for v in (p.get("variants") or [])] or [p]:
+                    preco = o["price_range"]["minimum_price"]["final_price"]
+                    if preco["currency"] != "PYG" or not preco["value"]:
+                        continue
+                    img = ((o.get("image") or p.get("image") or {}).get("url") or "")
+                    # Nissei mostra o preço com IVA; guardamos o preço exclusivo para estrangeiros (sem IVA)
+                    do_termo.append(oferta(o["name"], o["stock_status"] == "IN_STOCK", link,
+                                           "" if "placeholder" in img else img, gs=preco["value"] / (1 + IVA)))
+        cli.por_termo[t] = _reconhecidos(do_termo)
+        itens += do_termo
     return itens, cambio
 
 
@@ -155,10 +201,7 @@ def _woocommerce(cli, api):
             else:
                 lote.append((p["id"], None))
         return lote
-    itens = []
-    for t in TERMOS:
-        itens += _paginas(cli, lambda pg: api + "?search=%s&per_page=100&page=%d" % (quote(t), pg), ler)
-    return itens, None
+    return _por_termo(cli, _termos(cli), lambda t: lambda pg: api + "?search=%s&per_page=100&page=%d" % (quote(t), pg), ler), None
 
 
 def coletar_tecnostore(cli):
@@ -183,11 +226,8 @@ def _ler_prestashop(texto):
 
 
 def coletar_tienda_movil(cli):
-    itens = []
-    for t in TERMOS:
-        itens += _paginas(cli, lambda pg: "https://tiendamovil.com.py/shop/busqueda?controller=search&s=%s&ajax=1"
-                                          "&resultsPerPage=100&page=%d" % (quote(t), pg), _ler_prestashop)
-    return itens, None
+    return _por_termo(cli, _termos(cli), lambda t: lambda pg: "https://tiendamovil.com.py/shop/busqueda?controller=search&s=%s&ajax=1"
+                                                            "&resultsPerPage=100&page=%d" % (quote(t), pg), _ler_prestashop), None
 
 
 def coletar_visuar(cli):
@@ -216,10 +256,7 @@ def coletar_mega(cli):
                                            ("https://resource.megaeletronicos.com" + d["image"]) if d.get("image") else "",
                                            usd=usd)))
         return lote
-    itens = []
-    for t in TERMOS:
-        itens += _paginas(cli, lambda pg: "https://www.megaeletronicos.com/producto/buscar?search=%s&page=%d" % (quote(t), pg), ler)
-    return itens, None
+    return _por_termo(cli, _termos(cli), lambda t: lambda pg: "https://www.megaeletronicos.com/producto/buscar?search=%s&page=%d" % (quote(t), pg), ler), None
 
 
 def _ler_fenicio(h):
@@ -251,8 +288,11 @@ def _fenicio(cli, listagens):
 
 
 def coletar_alemania(cli):
-    return _fenicio(cli, ["https://www.alemaniacell.com/celulares?marca=apple"] +
-                    ["https://www.alemaniacell.com/catalogo?q=" + quote(t) for t in TERMOS if t != "iphone"])
+    itens, _ = _fenicio(cli, ["https://www.alemaniacell.com/celulares?marca=apple"])   # iPhones: pela categoria
+    cli.por_termo["iphone"] = _reconhecidos(itens)
+    return itens + _por_termo(cli, [t for t in _termos(cli) if t != "iphone"],
+                              lambda t: lambda pg: "https://www.alemaniacell.com/catalogo?q=" + quote(t) + ("&js=1&pag=%d" % pg if pg > 1 else ""),
+                              _ler_fenicio), None
 
 
 def coletar_bristol(cli):
@@ -279,11 +319,9 @@ def coletar_shopping_china(cli):
             usd = round(float(gs.replace(".", "")) / gs_por_usd / 5) * 5
             lote.append((caminho, oferta(nome, True, base + caminho, img, usd=usd)))
         return lote
-    itens = []
     # "celular apple iphone" traz os mesmos iPhones que "iphone" em metade das páginas
-    for t in ["celular apple iphone" if t == "iphone" else t for t in TERMOS]:
-        itens += _paginas(cli, lambda pg: base + "/site/search?query=%s&page=%d" % (quote(t), pg), ler)
-    return itens, None
+    busca = lambda t: "celular apple iphone" if t == "iphone" else t
+    return _por_termo(cli, _termos(cli), lambda t: lambda pg: base + "/site/search?query=%s&page=%d" % (quote(busca(t)), pg), ler), None
 
 
 # Não incluídas (ver LEIA-ME): Cellshop e Compulandia (proteção anti-robô), Gonzalez Gimenez e Compumarket
@@ -333,6 +371,9 @@ def abrir_banco(caminho=None):
             data_hora TEXT NOT NULL, loja TEXT NOT NULL, itens INTEGER NOT NULL,
             segundos REAL NOT NULL, pedidos INTEGER NOT NULL, erro TEXT
         );
+        CREATE TABLE IF NOT EXISTS buscas (    -- quantos produtos nossos cada termo de busca trouxe, por loja e dia
+            data TEXT NOT NULL, loja TEXT NOT NULL, termo TEXT NOT NULL, produtos INTEGER NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS pausas (    -- loja parada (erro/bloqueio): não tentar de novo no mesmo dia
             data TEXT NOT NULL, loja TEXT NOT NULL, motivo TEXT NOT NULL
         );
@@ -343,6 +384,36 @@ def abrir_banco(caminho=None):
     if "segundos" not in colunas:
         con.execute("ALTER TABLE coletas ADD COLUMN segundos REAL NOT NULL DEFAULT 0")
     return con
+
+
+def termos_da_loja(con, loja, data):
+    """Termos a buscar hoje nesta loja: todos, menos os que vieram vazios nas últimas DIAS_VAZIA checagens
+    — esses só voltam a ser buscados quando a última checagem tiver DIAS_RECHECAR dias ou mais.
+    Devolve (termos, pulados)."""
+    from datetime import date
+    termos, pulados = [], []
+    for t in TERMOS:
+        ultimas = con.execute("SELECT data, produtos FROM buscas WHERE loja = ? AND termo = ? AND data < ? "
+                              "ORDER BY data DESC LIMIT ?", (loja, t, data, DIAS_VAZIA)).fetchall()
+        sempre_vazia = len(ultimas) == DIAS_VAZIA and all(n == 0 for _, n in ultimas)
+        dias = (date.fromisoformat(data) - date.fromisoformat(ultimas[0][0])).days if ultimas else 0
+        (pulados if sempre_vazia and dias < DIAS_RECHECAR else termos).append(t)
+    return termos, pulados
+
+
+def verificar_buscas(con, loja, data, por_termo):
+    """Trava contra resposta parcial: buscas que trouxeram produtos na última checagem e hoje vieram vazias.
+    Devolve o texto do problema, ou None."""
+    sumidas = []
+    for t, n in por_termo.items():
+        antes = con.execute("SELECT produtos FROM buscas WHERE loja = ? AND termo = ? AND data < ? ORDER BY data DESC LIMIT 1",
+                            (loja, t, data)).fetchone()
+        if n == 0 and antes and antes[0] > 0:
+            sumidas.append(t)
+    if len(sumidas) >= MIN_BUSCAS_SUMIDAS:
+        return ("resposta parcial: %d buscas que traziam produtos vieram vazias (%s) — dados de hoje descartados, "
+                "mantidos os anteriores" % (len(sumidas), ", ".join(sumidas)))
+    return None
 
 
 def verificar_queda(con, loja, data, produtos_hoje):
@@ -380,8 +451,11 @@ def _guardar_resumo_copias(loja, data, produtos):
             json.dump({"data": data, "produtos": produtos}, f)
 
 
-def _rodar_loja(loja, funcao, real):
+def _rodar_loja(loja, funcao, real, termos=None):
     cli = Cliente(loja, real, log)
+    cli.termos = termos
+    if loja in INTERVALO_LOJA:
+        cli.intervalo = INTERVALO_LOJA[loja]
     inicio = time.time()
     try:
         itens, cambio = funcao(cli)
@@ -423,17 +497,33 @@ def main():
     so_loja = sys.argv[sys.argv.index("--loja") + 1].lower() if "--loja" in sys.argv else None
     if so_loja and "--ignorar-pausa" in sys.argv:   # pausa registrada por OUTRA conexão (ex.: GitHub bloqueado)
         pausadas = {}
+    # uma coleta real por loja por dia: a loja que já foi coletada com sucesso hoje não é acessada de novo
+    # (evita rajadas de pedidos, ex.: rodar a coleta várias vezes seguidas). --forcar ignora esta regra.
+    ja_coletadas = set() if not real or "--forcar" in sys.argv else {l for (l,) in con.execute(
+        "SELECT DISTINCT loja FROM coletas WHERE substr(data_hora, 1, 10) = ? AND erro IS NULL AND itens > 0", (data,))}
     lojas = []
     for loja, funcao in LOJAS:
         if so_loja and so_loja not in loja.lower():
+            continue
+        if loja in ja_coletadas:
+            log("   %s: já coletada com sucesso hoje — não será acessada de novo (use --forcar para insistir)" % loja)
             continue
         if loja in pausadas:
             log("   %s: pausada hoje (%s) — não será acessada até amanhã" % (loja, pausadas[loja]))
         else:
             lojas.append((loja, funcao))
 
+    if not lojas:
+        log("Nenhuma loja para coletar agora.")
+        con.close()
+        return 0
+    termos = {}
+    for loja, _ in lojas:
+        termos[loja], pulados = termos_da_loja(con, loja, data)
+        if pulados:
+            log("   %s: %d busca(s) puladas hoje (vazias nos últimos %d dias): %s" % (loja, len(pulados), DIAS_VAZIA, ", ".join(pulados)))
     with ThreadPoolExecutor(max_workers=max(1, len(lojas))) as ex:
-        resultados = list(ex.map(lambda l: _rodar_loja(l[0], l[1], real), lojas))   # reprocessar: real=False (cópias)
+        resultados = list(ex.map(lambda l: _rodar_loja(l[0], l[1], real, termos[l[0]]), lojas))   # reprocessar: real=False (cópias)
 
     # Cotação: a que a Nissei publicou nesta coleta; se não veio, a última salva
     cambio = next((r["cambio"] for r in resultados if r["cambio"]), None)
@@ -466,7 +556,8 @@ def main():
         r["linhas"] = linhas
         r["suspeita"] = False
         if not r["erro"]:
-            problema = verificar_queda(con, r["loja"], data, len(linhas))
+            problema = verificar_queda(con, r["loja"], data, len(linhas)) or \
+                verificar_buscas(con, r["loja"], data, r["cli"].por_termo)
             if problema:
                 r["erro"], r["suspeita"] = problema, True
         if not r["erro"]:
@@ -475,6 +566,10 @@ def main():
             # uma coleta por dia e por loja: a mais recente substitui a anterior do mesmo dia
             con.execute("DELETE FROM ofertas WHERE data = ? AND loja = ?", (data, r["loja"]))
             con.executemany("INSERT INTO ofertas VALUES (?,?,?,?,?,?,?)", linhas)
+            if real:   # só com a coleta da loja completa (sem erro): resultado de cada busca
+                con.execute("DELETE FROM buscas WHERE data = ? AND loja = ?", (data, r["loja"]))
+                con.executemany("INSERT INTO buscas VALUES (?,?,?,?)",
+                                [(data, r["loja"], t, n) for t, n in r["cli"].por_termo.items()])
         else:
             log("   %s: %s %s" % (r["loja"], "PARADA:" if r["parada"] else "SUSPEITA:" if r["suspeita"]
                                 else "MAC DORMIU:" if r.get("dormiu") else "ERRO:", r["erro"]))

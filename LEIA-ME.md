@@ -57,13 +57,23 @@ regrave a referência com `python3 testes.py --atualizar-nomes`.
 - Por causa do robots.txt: na Visuar usamos as categorias (a busca é proibida) e na Bristol as
   categorias com filtro de marca (`?marca=`).
 
+### Menos pedidos às lojas
+- **Uma coleta por loja por dia:** loja já coletada com sucesso no dia não é acessada de novo (para insistir: `--forcar`).
+- **Buscas sempre vazias são puladas:** cada busca (ex.: "galaxy a07") que não trouxe nenhum produto nosso numa loja
+  nas últimas 7 checagens deixa de ser feita lá todo dia e é reconferida 1 vez por semana (tabela `buscas`).
+- **Nissei:** 15–20 s entre pedidos (com 3–5 s ela começou a devolver buscas vazias).
+- **Trava de resposta parcial:** se 3 ou mais buscas que traziam produtos vierem vazias de uma vez, os dados da
+  loja no dia são descartados (como na trava de queda).
+- **Coletar uma loja só** (ex.: pelo Mac, quando o GitHub está bloqueado): `python3 coletor.py --real --loja mega`.
+
 No fim aparece um resumo: produtos por loja, pedidos feitos, endereços pulados pelo robots.txt, tempo e problemas.
 Para coletar sem publicar o site: `python3 coletor.py --real --sem-publicar`.
 
 ## Coleta automática: roda no GitHub (o Mac pode ficar desligado)
 
 Desde 12/11/2026 a coleta **não roda mais no Mac**. Quem roda é o **GitHub Actions**, de graça
-(o repositório é público), todo dia às **19h do Paraguai** (o GitHub às vezes atrasa alguns minutos).
+(o repositório é público), todo dia **de madrugada, por volta das 4h30 do Paraguai** (horário sorteado entre ~4h20 e 4h40, e o GitHub às vezes
+atrasa alguns minutos). De madrugada os sites das lojas estão quase sem visitas.
 
 A cada execução o GitHub: roda os testes → faz a coleta real (mesmas regras de educação) →
 guarda o `precos.db` atualizado no repositório → monta e publica o site.
@@ -75,7 +85,7 @@ guarda o `precos.db` atualizado no repositório → monta e publica o site.
   - `so-publicar` — só gera e publica o site com os dados que já existem (ex.: depois de mudar o visual);
   - `checar-conexao` — 1–2 pedidos por loja, para ver se alguma está bloqueando o GitHub.
 - **Aviso por e-mail:** o GitHub manda e-mail se uma execução falhar por completo.
-- **Mudar o horário:** linha `cron` em `.github/workflows/coleta.yml` (está em UTC: 22h UTC = 19h PY).
+- **Mudar o horário:** linha `cron` em `.github/workflows/coleta.yml` (está em UTC: 7h20 UTC = 4h20 PY).
 - **Desligar:** Actions → "Coleta diária" → botão "…" → Disable workflow.
 - **Atenção:** o GitHub desliga agendamentos de repositórios sem atividade por 60 dias; como a
   coleta grava um commit por dia, isso não deve acontecer.

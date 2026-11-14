@@ -201,6 +201,18 @@ def teste_trava():
         registrar("trava: queda de 100 para 40", caiu is not None)
         registrar("trava: 100 para 60 é aceito", normal is None)
         registrar("trava: loja sem histórico é aceita", nova is None)
+        # resposta parcial: buscas que traziam produtos vêm vazias de uma vez
+        t0, t1, t2, t3 = coletor.TERMOS[:4]
+        con.executemany("INSERT INTO buscas VALUES (?,?,?,?)", [("2026-01-01", "Loja X", t, 5) for t in (t0, t1, t2, t3)])
+        registrar("trava: 3 buscas somem de uma vez", coletor.verificar_buscas(con, "Loja X", "2026-01-02", {t0: 9, t1: 0, t2: 0, t3: 0}) is not None)
+        registrar("trava: 1 busca vazia é aceita", coletor.verificar_buscas(con, "Loja X", "2026-01-02", {t0: 9, t1: 0, t2: 5, t3: 5}) is None)
+        # busca vazia por 7 checagens: pulada, e reconferida 7 dias depois da última
+        con.executemany("INSERT INTO buscas VALUES (?,?,?,?)", [("2026-02-%02d" % d, "Loja Y", t0, 0) for d in range(1, 8)])
+        con.executemany("INSERT INTO buscas VALUES (?,?,?,?)", [("2026-02-%02d" % d, "Loja Y", t1, 2 if d == 7 else 0) for d in range(1, 8)])
+        termos, pulados = coletor.termos_da_loja(con, "Loja Y", "2026-02-08")
+        registrar("buscas: termo vazio 7 dias é pulado", pulados == [t0] and t1 in termos)
+        termos, pulados = coletor.termos_da_loja(con, "Loja Y", "2026-02-14")
+        registrar("buscas: termo pulado volta após 7 dias", t0 in termos and not pulados)
         con.close()
 
 

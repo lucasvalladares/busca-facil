@@ -48,7 +48,7 @@ def main():
     if not topico:
         print("Aviso: sem o segredo NTFY_TOPICO — nada enviado.")
         return
-    corpo = json.dumps({"topic": topico, "title": titulo, "message": msg, "priority": {"low": 2, "default": 3, "high": 5}[prioridade],
+    corpo = json.dumps({"topic": topico, "title": titulo, "message": msg, "priority": {"low": 2, "default": 2, "high": 3}[prioridade],   # coleta de madrugada: só a falha toca
                         "click": link}).encode("utf-8")
     req = urllib.request.Request("https://ntfy.sh/", data=corpo, headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=20) as resp:
