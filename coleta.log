@@ -204,3 +204,22 @@
 2026-11-14 19:40:01 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
 2026-11-14 19:40:01 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
 2026-11-14 19:40:01 Publicação: pulada (--sem-publicar).
+2026-11-15 05:45:25 === Coleta REAL 15/11/2026 (05:45) ===
+2026-11-15 05:48:55    Mega Eletrônicos: PARADA: TimeoutError em https://www.megaeletronicos.com/producto/buscar?search=galaxy%20a07&page=1
+2026-11-15 05:48:56 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-15 05:48:56 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-15 05:48:56 Nissei                  144        144        6        0     95s  ok
+2026-11-15 05:48:56 Mega Eletrônicos          0          0       26        0    189s  PARADA: TimeoutError em https://www.megaeletronicos.com/producto/buscar?search=galaxy%20a0
+2026-11-15 05:48:56 Shopping China          148        148       40        0    210s  ok
+2026-11-15 05:48:56 Alemania Cell            72         72       29        0    125s  ok
+2026-11-15 05:48:56 Tecnostore               92         85       26        0    145s  ok
+2026-11-15 05:48:56 Visuar                   84         45       13        0     49s  ok
+2026-11-15 05:48:56 Tienda Yankee            25         18       29        0    131s  ok
+2026-11-15 05:48:56 Bristol                  49         49       18        0     73s  ok
+2026-11-15 05:48:56 Tienda Móvil             41         26       32        0    130s  ok
+2026-11-15 05:48:56 Total: 655 produtos · 219 pedidos · 210 segundos · 1 loja(s) com problema
+2026-11-15 05:48:56 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista.html
+2026-11-15 05:48:56 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista-es.html
+2026-11-15 05:48:56 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
+2026-11-15 05:48:56 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
+2026-11-15 05:48:56 Publicação: pulada (--sem-publicar).
