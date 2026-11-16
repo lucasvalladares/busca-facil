@@ -223,3 +223,22 @@
 2026-11-15 05:48:56 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
 2026-11-15 05:48:56 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
 2026-11-15 05:48:56 Publicação: pulada (--sem-publicar).
+2026-11-16 03:31:27 === Coleta REAL 16/11/2026 (03:31) ===
+2026-11-16 03:35:13    Tecnostore: PARADA: TimeoutError em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-16 03:35:13 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-16 03:35:13 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-16 03:35:13 Nissei                  144        144        6        0     92s  ok
+2026-11-16 03:35:13 Mega Eletrônicos        229         96       34        0    195s  ok
+2026-11-16 03:35:13 Shopping China          147        147       39        0    226s  ok
+2026-11-16 03:35:13 Alemania Cell            72         72       29        0    127s  ok
+2026-11-16 03:35:13 Tecnostore                0          0        2        0     24s  PARADA: TimeoutError em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=i
+2026-11-16 03:35:13 Visuar                   84         45       13        0     52s  ok
+2026-11-16 03:35:13 Tienda Yankee            25         18       29        0    135s  ok
+2026-11-16 03:35:13 Bristol                  49         49       18        0     78s  ok
+2026-11-16 03:35:13 Tienda Móvil             40         27       32        0    138s  ok
+2026-11-16 03:35:13 Total: 790 produtos · 202 pedidos · 226 segundos · 1 loja(s) com problema
+2026-11-16 03:35:13 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista.html
+2026-11-16 03:35:13 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista-es.html
+2026-11-16 03:35:13 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
+2026-11-16 03:35:13 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
+2026-11-16 03:35:13 Publicação: pulada (--sem-publicar).
