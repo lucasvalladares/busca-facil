@@ -9,3 +9,6 @@ __pycache__/
 .DS_Store
 painel-aberto.html
 ultima-coleta.json
+reforco-mac.json
+reforco-mac.log
+.ntfy-topico

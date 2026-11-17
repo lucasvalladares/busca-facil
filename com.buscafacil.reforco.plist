@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Reforço pelo Mac (reforco_mac.py): ao entrar no Mac e a cada 30 min acordado,
+     coleta pelo Mac as lojas em que a coleta do robô (GitHub) falhou hoje. -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.buscafacil.reforco</string>
+  <key>ProgramArguments</key>
+  <array><string>/usr/bin/python3</string><string>/Users/lucas.valladares/monitor-precos/reforco_mac.py</string></array>
+  <key>WorkingDirectory</key><string>/Users/lucas.valladares/monitor-precos</string>
+  <key>EnvironmentVariables</key>
+  <dict><key>PATH</key><string>/Users/lucas.valladares/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string></dict>
+  <key>RunAtLoad</key><true/>
+  <key>StartInterval</key><integer>1800</integer>
+  <key>StandardOutPath</key><string>/Users/lucas.valladares/monitor-precos/reforco-mac.log</string>
+  <key>StandardErrorPath</key><string>/Users/lucas.valladares/monitor-precos/reforco-mac.log</string>
+</dict>
+</plist>
