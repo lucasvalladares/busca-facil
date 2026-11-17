@@ -93,6 +93,17 @@ guarda o `precos.db` atualizado no repositório → monta e publica o site.
 **Antes de mexer no código neste Mac:** rode `git pull` (o GitHub grava o banco novo todo dia).
 Depois de mudar, `git add -A && git commit -m "..." && git push`.
 
+### Reforço pelo Mac (quando o robô falha)
+Se a coleta do GitHub falhar numa loja, o **Mac coleta essa loja** (`reforco_mac.py`), com as mesmas regras de educação:
+- roda sozinho ao entrar no Mac e **a cada 30 min** enquanto ele está acordado (launchd: `com.buscafacil.reforco.plist`,
+  instalado em `~/Library/LaunchAgents`). Se o Mac estava desligado na hora, a coleta acontece quando ele ligar (no mesmo dia);
+- **uma tentativa por loja por dia** — se também falhar pelo Mac, só no dia seguinte;
+- se até as 8h o robô não coletou nada no dia, o Mac faz a coleta inteira;
+- depois grava o banco no GitHub, pede a publicação do site e avisa no Mac e no celular;
+- histórico em `reforco-mac.log`; tentativas do dia em `reforco-mac.json` (para pular uma loja num dia, ponha o nome dela ali);
+- ver o que faria agora, sem acessar nada: `python3 reforco_mac.py --ver`;
+- desligar: `launchctl unload ~/Library/LaunchAgents/com.buscafacil.reforco.plist`.
+
 **Rodar no Mac (só se precisar):** `python3 coletor.py --real --sem-publicar`. Não publica nada e
 deixa o banco local diferente do GitHub — evite. O agendamento antigo do Mac (launchd) foi desligado;
 o arquivo `com.monitorprecos.coleta.plist` ficou só como referência.
