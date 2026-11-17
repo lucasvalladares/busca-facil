@@ -58,11 +58,18 @@ jobs:
       - name: Coleta real
         if: github.event.inputs.modo == 'coleta' || github.event_name == 'schedule'
         run: |
-          # horário sorteado a cada dia: espera de 0 a 3 h (início entre 2h e 5h do Paraguai)
+          # horário sorteado a cada dia entre 2h e 5h do Paraguai. O GitHub às vezes começa com até 1 h de
+          # atraso: o sorteio é feito entre AGORA e 5h, para a coleta nunca passar das 5h.
           if [ "${{ github.event_name }}" = "schedule" ]; then
-            espera=$((RANDOM % 10800))
-            echo "Coleta sorteada para daqui a $((espera / 3600)) h $(((espera % 3600) / 60)) min"
-            sleep $espera
+            agora=$(date +%s)
+            limite=$(date -d "$(date +%F) 05:00" +%s)
+            if [ "$agora" -lt "$limite" ]; then
+              espera=$(( (RANDOM * 32768 + RANDOM) % (limite - agora) ))
+              echo "Coleta sorteada para as $(date -d "@$((agora + espera))" +%H:%M) (daqui a $((espera / 60)) min)"
+              sleep $espera
+            else
+              echo "O GitHub começou depois das 5h: coleta agora"
+            fi
           fi
           python3 coletor.py --real --sem-publicar || true
           {
