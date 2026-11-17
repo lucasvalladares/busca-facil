@@ -242,3 +242,24 @@
 2026-11-16 03:35:13 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
 2026-11-16 03:35:13 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
 2026-11-16 03:35:13 Publicação: pulada (--sem-publicar).
+2026-11-17 04:39:10 === Coleta REAL 17/11/2026 (04:39) ===
+2026-11-17 04:41:32    Mega Eletrônicos: SUSPEITA: queda suspeita: 0 produtos hoje contra 229 em 2026-11-16 — o site pode ter mudado; dados de hoje descartados, mantidos os anteriores
+2026-11-17 04:41:32    Shopping China: ERRO: RuntimeError: não deu para descobrir a relação Gs./US$ da loja
+2026-11-17 04:41:32    Tecnostore: PARADA: TimeoutError em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=iphone&per_page=100&page=1
+2026-11-17 04:41:32 Cotação: 1 US$ = Gs. 6.750 (Nissei)
+2026-11-17 04:41:32 Loja               produtos em estoque  pedidos   robots   tempo  situação
+2026-11-17 04:41:32 Nissei                  147        147        6        0     89s  ok
+2026-11-17 04:41:32 Mega Eletrônicos          0          0       21        0    117s  SUSPEITA: queda suspeita: 0 produtos hoje contra 229 em 2026-11-16 — o site pode ter mudad
+2026-11-17 04:41:32 Shopping China            0          0        2        0      6s  ERRO: RuntimeError: não deu para descobrir a relação Gs./US$ da loja
+2026-11-17 04:41:32 Alemania Cell            73         73       30        0    129s  ok
+2026-11-17 04:41:32 Tecnostore                0          0        2        0     25s  PARADA: TimeoutError em https://tecnostore.com.py/v2/wp-json/wc/store/v1/products?search=i
+2026-11-17 04:41:32 Visuar                   84         48       13        0     50s  ok
+2026-11-17 04:41:32 Tienda Yankee            25         18       29        0    131s  ok
+2026-11-17 04:41:32 Bristol                  49         49       18        0     75s  ok
+2026-11-17 04:41:32 Tienda Móvil             42         25       33        0    143s  ok
+2026-11-17 04:41:32 Total: 420 produtos · 154 pedidos · 143 segundos · 3 loja(s) com problema
+2026-11-17 04:41:33 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista.html
+2026-11-17 04:41:33 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-minimalista-es.html
+2026-11-17 04:41:33 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante.html
+2026-11-17 04:41:33 Página atualizada: /home/runner/work/busca-facil/busca-facil/relatorio-vibrante-es.html
+2026-11-17 04:41:33 Publicação: pulada (--sem-publicar).
