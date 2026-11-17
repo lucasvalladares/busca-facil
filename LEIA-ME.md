@@ -158,7 +158,10 @@ sqlite3 -header -column ~/monitor-precos/precos.db "SELECT data, loja, modelo, p
   O site mostra em Gs. por padrão; o botão **US$** converte no navegador, usando uma única cotação:
   a do momento da coleta (tabela `cambio`, publicada pela Nissei).
   - Nissei: preço **exclusivo para estrangeiros** (o preço do site sem o IVA de 10%).
-  - Mega e Shopping China: anunciam em US$ ("tax free"); convertido pela cotação da coleta.
+  - Shopping China: anuncia em US$ ("tax free"); convertido pela cotação da coleta.
+  - Mega: até 16/11/2026 anunciava em US$ ("tax free"). Desde 17/11/2026 o site novo só mostra guaranis
+    (com IVA, ~11% acima do valor anterior convertido): guardamos o valor em Gs. como a loja mostra.
+    Por isso o histórico da Mega tem um salto de ~11% em 17/11 que não é aumento de preço de verdade.
   - Alemania Cell, Tecnostore e Visuar: valor original em guaranis (com IVA).
 - **Condição:** "seminuevo" (Tecnostore) e "SWAP" (Visuar) entram como Recondicionado (CPO).
 - Se uma loja mudar o site, a coleta dela falha (as outras continuam) e a página mostra "erro" no rodapé.

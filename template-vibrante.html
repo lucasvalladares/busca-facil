@@ -364,7 +364,7 @@ let MOEDA = (COTACAO && localStorage.getItem('moeda') === 'USD') ? 'USD' : 'PYG'
 const usdFmt = v => 'US$ ' + (Number.isInteger(v) ? fmt(v) : fmt(v, 2));
 const preco = v => MOEDA === 'USD' ? usdFmt(Math.round(v / COTACAO * 100) / 100) : gs(v);
 const conv = v => MOEDA === 'USD' ? v / COTACAO : v;
-const LOJAS_EM_DOLAR = ['Mega Eletrônicos', 'Shopping China'];
+const LOJAS_EM_DOLAR = ['Shopping China'];   // Mega: só Gs. desde 17/11/2026
 function desenharMoeda() {
   document.querySelectorAll('[data-moeda]').forEach(b => b.setAttribute('aria-pressed', b.dataset.moeda === MOEDA));
 }

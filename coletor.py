@@ -25,7 +25,7 @@ Fonte usada em cada loja (a mais leve permitida; nunca produto por produto):
   Tienda Yankee   API JSON da plataforma (WooCommerce), em Gs.
   Tienda Móvil    JSON da busca do site (PrestaShop), em Gs.
   Visuar          JSON das categorias Celulares/iPhone e Celulares/Xiaomi (a busca é proibida no robots.txt)
-  Mega            JSON embutido no HTML da busca, em US$
+  Mega            HTML da busca, em Gs. (site novo desde 17/11/2026; antes: JSON em US$)
   Alemania Cell   HTML da listagem (categoria Apple + busca), em Gs.
   Bristol         HTML das categorias com filtro de marca (a busca é proibida no robots.txt), em Gs.
   Shopping China  HTML da busca (Gs.) + 1 JSON para a relação Gs./US$ da loja
@@ -239,24 +239,28 @@ def coletar_visuar(cli):
     return itens, None
 
 
+def _ler_mega(h):
+    """Site novo da Mega (desde 17/11/2026): cartões <a href=".../producto/<código>/..." class="p-card ...">,
+    preço em Gs. como a loja mostra (no Paraguai o site só mostra guaranis), "En stock" / "Fuera de stock"."""
+    lote = []
+    for k in re.split(r'(?=<a href="https://www\.megaeletronicos\.com/producto/\d+/[^"]*"\s*class="p-card)', h)[1:]:
+        fim = k.find("</a>", k.find('class="p-title'))
+        k = k[:fim if fim > 0 else len(k)]
+        link = re.match(r'<a href="([^"]+)"', k).group(1)
+        cod = re.search(r"/producto/(\d+)/", link).group(1)
+        nome = re.search(r'<h3 class="p-title[^"]*">\s*(.*?)\s*</h3>', k, re.S)
+        precos = [int(x.replace(".", "")) for x in re.findall(r"Gs\.\s*([\d.]+)", k)]
+        if not nome or not precos or min(precos) <= 1000:   # sem preço ("Consultar"): ignorado
+            lote.append((cod, None))
+            continue
+        img = re.search(r'<img\s+src="(https://resource\.megaeletronicos\.com/[^"]+)"', k)
+        lote.append((cod, oferta(nome.group(1), "Fuera de stock" not in k and "En stock" in k, link,
+                                 img.group(1) if img else "", gs=min(precos))))
+    return lote
+
+
 def coletar_mega(cli):
-    def ler(h):
-        lote = []
-        for b in re.findall(r'addItemToFavorite\((\{.*?\})\)"', h):
-            d = json.loads(html.unescape(b))
-            usd, promo = float(d.get("price") or 0), float(d.get("price_promo") or 0)
-            if 0 < promo < usd:
-                usd = promo
-            if usd <= 1:   # a Mega usa US$ 1 para "sem preço"
-                lote.append((d["code"], None))
-                continue
-            idioma = (d.get("product_langs") or [{}])[0]
-            lote.append((d["code"], oferta(idioma.get("name", ""), d.get("in_stock"),
-                                           "https://www.megaeletronicos.com/producto/%s/%s" % (d["code"], idioma.get("slug", "")),
-                                           ("https://resource.megaeletronicos.com" + d["image"]) if d.get("image") else "",
-                                           usd=usd)))
-        return lote
-    return _por_termo(cli, _termos(cli), lambda t: lambda pg: "https://www.megaeletronicos.com/producto/buscar?search=%s&page=%d" % (quote(t), pg), ler), None
+    return _por_termo(cli, _termos(cli), lambda t: lambda pg: "https://www.megaeletronicos.com/producto/buscar?search=%s&page=%d" % (quote(t), pg), _ler_mega), None
 
 
 def _ler_fenicio(h):
@@ -303,11 +307,14 @@ def coletar_bristol(cli):
 def coletar_shopping_china(cli):
     base = "https://www.shoppingchina.com.py"
     amostra = cli.get(base + "/quick_search?search=celular%20apple%20iphone", cabecalhos={"Accept": "application/json"})
-    relacoes = sorted(float(p["regular_price_pyg"]) / float(p["regular_price_usd"])
-                      for p in json.loads(amostra or "[]") if float(p.get("regular_price_usd") or 0) > 0)
-    if not relacoes:
-        raise RuntimeError("não deu para descobrir a relação Gs./US$ da loja")
-    gs_por_usd = relacoes[len(relacoes) // 2]
+    try:
+        relacoes = sorted(float(p["regular_price_pyg"]) / float(p["regular_price_usd"])
+                          for p in json.loads(amostra or "[]") if float(p.get("regular_price_usd") or 0) > 0)
+    except ValueError:   # resposta vazia ou fora do formato (visto em 17/11/2026)
+        relacoes = []
+    gs_por_usd = relacoes[len(relacoes) // 2] if relacoes else None
+    if not gs_por_usd:
+        log("   Shopping China: sem a relação Gs./US$ da loja — preços guardados em Gs., como a loja mostra")
 
     def ler(h):
         lote = []
@@ -316,8 +323,11 @@ def coletar_shopping_china(cli):
                 r'<span class="lightning-prod-desc[^"]*">\s*([^<]+?)\s*</span>.*?'
                 r'lightning-prod-sale[^"]*">\s*Gs\.\s*([\d.]+)', h, re.S):
             # preço "tax free" em US$, como a loja anuncia (múltiplos de 5)
-            usd = round(float(gs.replace(".", "")) / gs_por_usd / 5) * 5
-            lote.append((caminho, oferta(nome, True, base + caminho, img, usd=usd)))
+            if gs_por_usd:
+                usd = round(float(gs.replace(".", "")) / gs_por_usd / 5) * 5
+                lote.append((caminho, oferta(nome, True, base + caminho, img, usd=usd)))
+            else:
+                lote.append((caminho, oferta(nome, True, base + caminho, img, gs=float(gs.replace(".", "")))))
         return lote
     # "celular apple iphone" traz os mesmos iPhones que "iphone" em metade das páginas
     busca = lambda t: "celular apple iphone" if t == "iphone" else t
@@ -419,10 +429,11 @@ def verificar_buscas(con, loja, data, por_termo):
 def verificar_queda(con, loja, data, produtos_hoje):
     """Trava contra quebra silenciosa: compara com a última coleta bem-sucedida da loja.
     Devolve o texto do problema, ou None se está tudo bem."""
-    anterior = con.execute("""SELECT data, COUNT(*) FROM ofertas WHERE loja = ? AND data < ?
+    # compara só produtos EM ESTOQUE (alguns sites deixam de listar os esgotados, sem que nada tenha quebrado)
+    anterior = con.execute("""SELECT data, SUM(em_estoque) FROM ofertas WHERE loja = ? AND data < ?
                               GROUP BY data ORDER BY data DESC LIMIT 1""", (loja, data)).fetchone()
     if anterior and produtos_hoje < LIMITE_QUEDA * anterior[1]:
-        return ("queda suspeita: %d produtos hoje contra %d em %s — o site pode ter mudado; "
+        return ("queda suspeita: %d produtos em estoque hoje contra %d em %s — o site pode ter mudado; "
                 "dados de hoje descartados, mantidos os anteriores" % (produtos_hoje, anterior[1], anterior[0]))
     return None
 
@@ -556,7 +567,7 @@ def main():
         r["linhas"] = linhas
         r["suspeita"] = False
         if not r["erro"]:
-            problema = verificar_queda(con, r["loja"], data, len(linhas)) or \
+            problema = verificar_queda(con, r["loja"], data, sum(1 for l in linhas if l[5])) or \
                 verificar_buscas(con, r["loja"], data, r["cli"].por_termo)
             if problema:
                 r["erro"], r["suspeita"] = problema, True
