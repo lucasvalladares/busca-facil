@@ -66,6 +66,8 @@ DIAS_RECHECAR = 7
 # Nissei: cada pedido junta 6 buscas; com pedidos a cada 3–5 s ela passa a devolver buscas vazias
 # (visto em 14/11/2026). Ritmo mais lento só para ela (são só 4–5 pedidos).
 INTERVALO_LOJA = {"Nissei": (15.0, 20.0)}
+# Lojas coletadas por último, separadas das outras (Tecnostore: a busca de iPhone às vezes demora > 20 s)
+POR_ULTIMO = ["Tecnostore"]
 # Resposta parcial: se tantas buscas que traziam produtos vierem vazias de uma vez, os dados do dia são descartados
 MIN_BUSCAS_SUMIDAS = 3
 
@@ -533,8 +535,15 @@ def main():
         termos[loja], pulados = termos_da_loja(con, loja, data)
         if pulados:
             log("   %s: %d busca(s) puladas hoje (vazias nos últimos %d dias): %s" % (loja, len(pulados), DIAS_VAZIA, ", ".join(pulados)))
-    with ThreadPoolExecutor(max_workers=max(1, len(lojas))) as ex:
-        resultados = list(ex.map(lambda l: _rodar_loja(l[0], l[1], real, termos[l[0]]), lojas))   # reprocessar: real=False (cópias)
+    # As lojas rodam juntas (cada uma no seu ritmo); as de POR_ULTIMO só começam depois que todas as outras
+    # terminaram, uma de cada vez — assim uma loja lenta não atrapalha as outras.
+    primeiro = [l for l in lojas if l[0] not in POR_ULTIMO]
+    with ThreadPoolExecutor(max_workers=max(1, len(primeiro))) as ex:
+        resultados = list(ex.map(lambda l: _rodar_loja(l[0], l[1], real, termos[l[0]]), primeiro))   # reprocessar: real=False (cópias)
+    for loja, funcao in lojas:
+        if loja in POR_ULTIMO:
+            log("   %s: começando agora (roda por último, separada das outras)" % loja)
+            resultados.append(_rodar_loja(loja, funcao, real, termos[loja]))
 
     # Cotação: a que a Nissei publicou nesta coleta; se não veio, a última salva
     cambio = next((r["cambio"] for r in resultados if r["cambio"]), None)
