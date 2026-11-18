@@ -35,7 +35,8 @@ REPO = "lucasvalladares/busca-facil"
 
 def log(msg):
     linha = "%s %s" % (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), msg)
-    print(linha)
+    if sys.stdout.isatty():   # no launchd a saída já vai para o mesmo arquivo de log: não repetir
+        print(linha)
     with open(LOG, "a", encoding="utf-8") as f:
         f.write(linha + "\n")
 
