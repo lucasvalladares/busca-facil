@@ -102,21 +102,33 @@ def main():
                    "--ignorar-pausa", "--sem-publicar"], timeout=1800)
         linha = next((x for x in r.stdout.splitlines() if x.startswith(loja)), "")
         sucesso = linha.rstrip().endswith("ok")
-        resultado[loja] = sucesso
         log("%s: %s" % (loja, linha.strip() or r.stdout[-300:]))
+        if "MAC DORMIU" in linha:   # a loja não teve culpa: tenta de novo na próxima vez que o Mac estiver acordado
+            tentadas.pop(loja, None)
+            json.dump({hoje: tentadas}, open(ESTADO, "w"))
+            log("%s: o Mac dormiu durante a coleta — nova tentativa na próxima execução" % loja)
+            continue
+        resultado[loja] = sucesso
 
     ok = [l for l, s in resultado.items() if s]
     falha = [l for l, s in resultado.items() if not s]
-    if ok:
+    # grava SEMPRE o banco no GitHub (também as tentativas que falharam): assim o banco deste Mac nunca fica
+    # com alterações pendentes que travariam o próximo "git pull"
+    if rodar(["git", "status", "--porcelain", "precos.db"]).stdout.strip():
         rodar(["git", "add", "precos.db", "fotos"])
-        rodar(["git", "commit", "-q", "-m", "Reforço pelo Mac %s: %s" % (agora.strftime("%d/%m/%Y %H:%M"), ", ".join(ok))])
+        rodar(["git", "commit", "-q", "-m", "Reforço pelo Mac %s: %s" % (agora.strftime("%d/%m/%Y %H:%M"),
+              "; ".join(x for x in ["ok: " + ", ".join(ok) if ok else "", "falhou: " + ", ".join(falha) if falha else ""] if x)
+              or "Mac dormiu")])
         r = rodar(["git", "pull", "-q", "--rebase"])
         r = rodar(["git", "push", "-q"]) if r.returncode == 0 else r
         if r.returncode != 0:
             log("não consegui enviar ao GitHub: %s" % r.stderr.strip()[:300])
             avisar("Busca Fácil: reforço pelo Mac", "Coletei %s, mas não consegui enviar ao GitHub." % ", ".join(ok))
             return
-        rodar(["gh", "workflow", "run", "coleta.yml", "-R", REPO, "-f", "modo=so-publicar"])
+        if ok:
+            rodar(["gh", "workflow", "run", "coleta.yml", "-R", REPO, "-f", "modo=so-publicar"])
+    if not resultado:
+        return
     msg = ("Atualizadas pelo Mac: %s." % ", ".join(ok) if ok else "") + \
           (" Também falharam pelo Mac: %s (nova tentativa amanhã)." % ", ".join(falha) if falha else "")
     log(msg.strip())
