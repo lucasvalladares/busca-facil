@@ -101,6 +101,15 @@ jobs:
 
       - id: deploy
         if: github.event.inputs.modo != 'checar-conexao'
+        continue-on-error: true   # às vezes o GitHub ainda não registrou o pacote: tenta de novo abaixo
+        uses: actions/deploy-pages@v5
+
+      - name: Esperar antes de tentar publicar de novo
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 30
+
+      - id: deploy2
+        if: steps.deploy.outcome == 'failure'
         uses: actions/deploy-pages@v5
 
       - name: Aviso no celular
