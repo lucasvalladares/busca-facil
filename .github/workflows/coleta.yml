@@ -40,9 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 240   # inclui a espera sorteada (até 3 h)
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -94,14 +94,14 @@ jobs:
           PAINEL_SENHA: ${{ secrets.PAINEL_SENHA }}   # painel interno: publicado só criptografado
         run: python3 -c "import pagina, publicar, painel; pagina.gerar(); publicar.montar_site(); painel.gerar_site()"
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: github.event.inputs.modo != 'checar-conexao'
         with:
           path: site
 
       - id: deploy
         if: github.event.inputs.modo != 'checar-conexao'
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       - name: Aviso no celular
         if: always() && (github.event_name == 'schedule' || github.event.inputs.modo == 'coleta')
