@@ -199,7 +199,9 @@ input[type=search] { min-width: 220px; }
 .lista-lojas .dif { text-align: right; color: var(--tinta-suave); font-size: 12px; }
 .lista-lojas .obs { grid-column: 1 / -1; color: var(--tinta-suave); font-size: 12px; }
 .lista-lojas .obs b { color: var(--tinta); }
-.lista-lojas li.fora { opacity: .55; }
+.lista-lojas li.fora .valor { color: var(--tinta-suave); }
+.lista-lojas li.fora .nome-loja { color: var(--tinta-suave); }
+.tag-ultimo { display: inline-block; background: var(--laranja); color: var(--texto-no-laranja); border-radius: 999px; padding: 1px 8px; font-weight: 700; font-size: 11px; margin-right: 4px; }
 .alerta { background: var(--laranja); color: var(--texto-no-laranja); border-radius: 14px; padding: 12px 16px; margin: 0 0 18px; font-size: 14px; }
 .alerta b { font-family: var(--fonte-titulo); font-weight: 400; font-size: 20px; text-transform: uppercase; display: block; letter-spacing: .02em; }
 
@@ -884,8 +886,11 @@ function paginaDetalhe(m, condPedida, armPedido, corPedida) {
   v.semOfertaHoje.forEach(s => {
     const li = el('li', {class: 'fora'}, ol);
     el('span', {class: 'nome-loja'}, li, s.loja);
-    el('span', {class: 'valor'}, li, '—');
-    el('span', {class: 'detalhe'}, li, 'Sem oferta hoje · último preço em ' + dataLonga(s.desde));
+    el('span', {class: 'valor'}, li, s.preco ? preco(s.preco) : '—');
+    const det = el('span', {class: 'detalhe', title: s.nome || ''}, li);
+    el('span', {class: 'tag-ultimo'}, det, 'Último preço registrado');
+    det.append(' em ' + dataLonga(s.desde) + ' · sem oferta hoje');
+    if (s.link) { det.append('  '); el('a', {href: s.link, target: '_blank', rel: 'noopener'}, det, 'Ver na loja →'); }
   });
 
   // Celular: barra fixa com o menor preço, visível enquanto a pessoa troca os filtros.

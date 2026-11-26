@@ -199,7 +199,9 @@ def montar_dados(baixar_fotos=False):
             ultimo[loja] = dict(info, data=data)
         hoje = sorted(({"loja": l, "preco": u["preco"], "link": u["link"], "nome": u["nome"]}
                        for l, u in ultimo.items() if u["data"] == ultima), key=lambda x: x["preco"])
-        sem_oferta = [{"loja": l, "desde": u["data"]} for l, u in ultimo.items() if u["data"] != ultima]
+        # lojas sem oferta hoje (sem estoque ou coleta da loja falhou): último preço registrado, o mais recente primeiro
+        sem_oferta = sorted(({"loja": l, "desde": u["data"], "preco": u["preco"], "link": u["link"], "nome": u["nome"]}
+                             for l, u in ultimo.items() if u["data"] != ultima), key=lambda s: (s["desde"] < ultima and -int(s["desde"].replace("-", "")), s["preco"]))
         return {"series": series, "hoje": hoje, "semOfertaHoje": sem_oferta}
 
     lista = []

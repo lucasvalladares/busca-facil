@@ -169,7 +169,9 @@ input[type=search] { min-width: 220px; }
 .lista-lojas .dif { text-align: right; color: var(--tinta-suave); font-size: 12px; }
 .lista-lojas .obs { grid-column: 1 / -1; color: var(--tinta-suave); font-size: 12px; }
 .lista-lojas .obs b { color: var(--tinta); }
-.lista-lojas li.fora { opacity: .55; }
+.lista-lojas li.fora .valor { color: var(--tinta-suave); }
+.lista-lojas li.fora .nome-loja { color: var(--tinta-suave); }
+.tag-ultimo { display: inline-block; background: #FDF3E6; color: #A35A00; border: 1px solid #F3C98F; border-radius: 999px; padding: 0 7px; font-weight: 600; font-size: 11px; margin-right: 4px; }
 .alerta { background: #FDF3E6; border-left: 3px solid var(--laranja); color: var(--tinta); border-radius: 8px; padding: 10px 14px; margin: 0 0 16px; font-size: 14px; }
 .alerta b { font-weight: 700; display: block; }
 
